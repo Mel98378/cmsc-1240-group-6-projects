@@ -21,8 +21,8 @@
     contributions
     ---------------------
     lavender: main(), print_greeting(), program_loop(), print_options(),
-              choice_from_input(), is_valid_option(), print_choice_error(),
-              binary_log()
+              choice_from_input(), is_valid_option(), print_choice_error()
+    Camron: multiplication() and subtraction()
     
 */
 
@@ -58,9 +58,27 @@ void division() {
 }
 
 void multiplication() {
+    double num1, num2, result;
+    
+    cout << "You have selected multiplication please enter the first number" << endl;
+    cin >> num1;
+    cout << "Enter the second number" << endl;
+    cin >> num2;
+    result = num1 * num2;
+    
+    cout << num1 << " * " << num2 << " = " << result << endl;
 }
 
 void subtraction() {
+    double num1, num2, result;
+    
+    cout << "You have selected subtraction please enter the first number" << endl;
+    cin >> num1;
+    cout << "Enter the second number" << endl;
+    cin >> num2;
+    result = num1 - num2;
+    
+    cout << num1 << " - " << num2 << " = " << result << endl;
 }
 
 void addition() {
@@ -136,4 +154,5 @@ void print_greeting() {
 int main() {
     print_greeting();
     program_loop();
+    
 }
