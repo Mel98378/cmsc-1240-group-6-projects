@@ -20,8 +20,8 @@
 /*
     contributions
     ---------------------
-    lavender: main(), print_greeting(), program_loop(), print_options(),
-              choice_from_input(), is_valid_option(), print_choice_error()
+    lavender: rint_greeting(), program_loop(), print_options(), choice_from_input(), 
+    is_valid_option(), print_choice_error(), binary_log()
     Camron: multiplication() and subtraction()
     
 */
@@ -89,7 +89,6 @@ void print_choice_error(string choice) {
          << "Select an option: ";
 }
 
-// regex matching for acceptable inputs
 bool is_valid_option(string input) {
     regex reg("[0-9]+");
     return regex_match(input, reg);
@@ -154,5 +153,4 @@ void print_greeting() {
 int main() {
     print_greeting();
     program_loop();
-    
 }
