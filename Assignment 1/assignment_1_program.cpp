@@ -40,15 +40,13 @@ void division() {
 void multiplication() {
     double num1, num2, result;
     
-    cout << "You have selected multiplication please enter the first number" << endl
+    cout << "You have selected multiplication please enter the first number" << endl;
     cin >> num1;
     cout << "Enter the second number" << endl;
     cin >> num2;
     result = num1 * num2;
     
-    cout << num1 << " * " << num2 << result << endl;
-    
-    return 0;
+    cout << num1 << " * " << num2 << " = " << result << endl;
 }
 
 void subtraction() {
@@ -60,9 +58,7 @@ void subtraction() {
     cin >> num2;
     result = num1 - num2;
     
-    cout << num1 << " - " << num2 << result << endl;
-    
-    return 0;
+    cout << num1 << " - " << num2 << " = " << result << endl;
 }
 
 void addition() {
