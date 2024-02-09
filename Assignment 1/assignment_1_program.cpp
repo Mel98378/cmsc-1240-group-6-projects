@@ -33,6 +33,25 @@
 using namespace std;
 
 void binary_log() {
+    cout << "\nYou chose Log base 2. " << endl;
+    
+    string in = "";
+    double input = 0;
+    regex correct("[0-9]+\.?[0-9]*");
+    do {
+        cout << "Choose a number to take the binary log of: ";
+        cin >> in;
+
+        if(!regex_match(in, correct) || in == "0") {
+            cout << "Please choose a positive real number. " << endl;
+            continue;
+        }
+
+        input = stod(in);
+
+    } while (input <= 0);
+
+    cout << "The binary log of " << input << " is " << log2(input) << ".";
 }
 
 void division() {
@@ -97,7 +116,7 @@ int choice_from_input(string input) {
 }
 
 void print_options() {
-    cout << "\n----------------" << endl
+    cout << "\n\n----------------" << endl
          << "Available options: " << endl
          << "\t[0]: Addition" << endl
          << "\t[1]: Subtraction" << endl
@@ -114,8 +133,6 @@ void program_loop() {
 
     while(true) {
         print_options();
-
-        // only valid input if input matches and if choice is in range
         choice = choice_from_input(input);
 
         switch (choice) {
@@ -124,7 +141,7 @@ void program_loop() {
             case 2: multiplication(); break;
             case 3: division(); break;
             case 4: binary_log(); break;
-            case 5: return;
+            case 5: cout << "Exiting the program."; return;
             default: cout << "Something has gone wrong." << endl; return;
         }
     }
