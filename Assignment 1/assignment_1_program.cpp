@@ -57,6 +57,21 @@ void binary_log() {
 }
 
 void division() {
+    double numerator, denominator, result;
+
+    cout << "Enter the numerator: ";
+    cin >> numerator;
+
+    cout << "Enter the denominator: ";
+    cin >> denominator;
+
+    // Check for division by zero
+    if(denominator == 0) {
+        cout << "Error: Division by zero is undefined." << endl;
+    } else {
+        result = numerator / denominator;
+        cout << "The result of the division is: " << result << endl;
+    }
 }
 
 void multiplication() {
