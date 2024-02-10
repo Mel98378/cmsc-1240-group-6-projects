@@ -20,9 +20,11 @@
 /*
     contributions
     ---------------------
-    lavender: rint_greeting(), program_loop(), print_options(), choice_from_input(), 
-    is_valid_option(), print_choice_error(), binary_log()
+    lavender: print_greeting(), program_loop(), print_options(), choice_from_input(), 
+              is_valid_option(), print_choice_error(), binary_log()
     Camron: multiplication() and subtraction()
+    Evan: addition()
+    Teddy: division() 
     
 */
 
@@ -82,6 +84,13 @@ void subtraction() {
 }
 
 void addition() {
+    int A,B,sum;
+    cout<<"Enter an integer : ";
+    cin >> A;
+    cout<<"Enter another integer : ";
+    cin >> B;
+    sum=A+B;
+    cout<<A<<" + "<<B<<" = "<<sum;
 }
 
 void print_choice_error(string choice) {
