@@ -53,7 +53,7 @@ void binary_log() {
 
     } while (input <= 0);
 
-    cout << "The binary log of " << input << " is " << log2(input) << ".";
+    cout << "Log2(" << input << ") = " << log2(input);
 }
 
 void division() {
@@ -70,7 +70,7 @@ void division() {
         cout << "Error: Division by zero is undefined." << endl;
     } else {
         result = numerator / denominator;
-        cout << "The result of the division is: " << result << endl;
+        cout << numerator << " / " << denominator << " = " << result << endl;
     }
 }
 
@@ -99,10 +99,10 @@ void subtraction() {
 }
 
 void addition() {
-    int A,B,sum;
-    cout<<"Enter an integer : ";
+    double A,B,sum;
+    cout<<"Enter a number : ";
     cin >> A;
-    cout<<"Enter another integer : ";
+    cout<<"Enter another number : ";
     cin >> B;
     sum=A+B;
     cout<<A<<" + "<<B<<" = "<<sum;
