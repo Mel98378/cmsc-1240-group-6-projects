@@ -192,13 +192,21 @@ void get_num_players() {
     num_players = validate_input(message, reg, condition_str, conditions);
 }
 
-// regex match and check conditions
+// regex matching for acceptable inputs
+/*
+    print out a prompt message, check that the input is valid, 
+    then match the input against the restrictions that define
+    all acceptable values
+*/
 int validate_input(string message, regex desired, string condition_str, function<bool(int)> conditions) {
     string input;
     int num;
-    do {
+    while(true) {
         cout << message;
         cin >> input;
+
+        // making sure you enter something expected
+        // (ex. don't want users entering strings when asked for ints)
         if(!regex_match(input, desired)) {
             print_input_error(input, condition_str);
             continue;
@@ -210,9 +218,14 @@ int validate_input(string message, regex desired, string condition_str, function
             print_input_error(input, condition_str);
             continue;
         }
-        break;
-    } while(true);
 
+        // only break if both previous checks fail
+        // (correct input type) && (passes conditions)
+        break;
+    };
+
+    // return the number once we know it's safe 
+    // to use and within our bounds
     return num;
 }
 
@@ -231,7 +244,7 @@ void print_game_information() {
     }
 
     cout << endl << "Press any key to continue. " << endl << endl;
-    getch();
+    getch(); // waits until a player pressey a key
 
     cout << "Player information:" << endl
          << "----------------------" << endl
@@ -245,16 +258,17 @@ void print_game_information() {
          << "Good luck." << endl << endl;
 
     cout << "Press any key to continue. " << endl << endl; 
-    getch();
+    getch(); // waits until a player presses a key
 }
 
+// prompt each player to input their name and class
 void player_choose_info() {
     string message = "";
     regex reg("[0-9]");
     string condition_str = "an integer at least 0 and at most 2";
     function<bool(int)> condition = [](int x) {return (x >= 0 && x <=2);};
     
-    // get player name and update
+    // get player names and update `player_names`
     for(int i = 0; i < num_players; i++) {
         string name;
         cout << "Player " << i << ", enter your name (max length 25): ";
@@ -265,17 +279,21 @@ void player_choose_info() {
         char safe_name[26];
         strncpy(safe_name, name.c_str(), 25);
         safe_name[25] = '\0'; // 26th character should be a null terminator
+
+        // update player name with safe type
         strcpy(player_names[i], safe_name);
     }
 
     print_class_options();
     cout << endl;
 
-    // get player classes
+    // get player classes and update `player_class`
     for(int i = 0; i < num_players; i++) {
         string name = player_names[i];
         message = name + ", choose a class: ";
-        validate_input(message, reg, condition_str, condition);
+
+        // update the player's class
+        player_class[i] = validate_input(message, reg, condition_str, condition);
     }
 }
 
