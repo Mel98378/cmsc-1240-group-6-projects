@@ -352,25 +352,67 @@ void start_game() {
           the locations)
 */
 void town() {}
+cout << "You are in the town. Where do you want to go next?" << endl;
+    cout << "1. Mineshaft" << endl;
+    cout << "2. Castle" << endl;
+    cout << "Enter the number of your choice: ";
+     
+    int choice;
+    cin >> choice;
 
-// the mineshaft
-/*
-    the location where the players battle random enemies
-    (except for the dragon). You may add as many enemies
-    as you want, provided you make the proper modifications
-    to the parallel arrays above the prototype section under
-    enemy data
+    if (choice == 1) {
+        party_location = 1; // Go to Mineshaft
+    } else if (choice == 2) {
+        party_location = 2; // Go to Castle
+    } else {
+        cout << "Invalid choice. Please choose again." << endl;
+        town(); // Recursive call to let the player choose again
+    }
+                                                         }// the mineshaft
+                                                           /*
+                                                           the location where the players battle random enemies
+                                                            (except for the dragon). You may add as many enemies
+                                                             as you want, provided you make the proper modifications
+                                                             to the parallel arrays above the prototype section under
+                                                             enemy data
 
-    this function must:
-        - change `game_over` to true if every player
-          has died
-        - after an encounter, allow the users to leave 
-          (you can do this just by changinge `party_location` 
-          to 1 or 2 and then returning nothing, though make sure 
-          to list the locations)
-*/
+                                                                   this function must:
+                                                                - change `game_over` to true if every player
+                                                               has died
+                                                                   - after an encounter, allow the users to leave 
+                                                                    (you can do this just by changinge `party_location` 
+                                                                to 1 or 2 and then returning nothing, though make sure 
+                                                                     to list the locations)
+                                                                     */
 void mineshaft() {}
+cout << "You encounter a random enemy in the mineshaft!" << endl;
+    // Simulate a basic encounter
+    int enemyHP = 30; // Example HP for an enemy
+    cout << "You attack the enemy." << endl;
+    enemyHP -= 10; // Example attack reduces enemy HP
 
+    if (enemyHP <= 0) {
+        cout << "Enemy defeated!" << endl;
+        // Allow players to choose where to go next
+        cout << "Where do you want to go next?" << endl;
+        cout << "1. Return to town" << endl;
+        cout << "2. Continue in the mineshaft" << endl;
+        cout << "Enter the number of your choice: ";
+
+        int choice;
+        cin >> choice;
+
+        if (choice == 1) {
+            party_location = 0; // Go back to Town
+        } else {
+            mineshaft(); // Continue exploring the Mineshaft
+        }
+    } else {
+        // If not all enemies are defeated
+        cout << "You have been defeated by the enemy!" << endl;
+        game_over = true;
+    }
+}
 // the castle
 /*
     the location where the party encounters the final boss
@@ -386,9 +428,25 @@ void mineshaft() {}
           the dragon is defeated, then return nothing
 */
 void castle() {}
+cout << "You face the dragon in the final battle!" << endl;
+    // Simplified battle against dragon
+    int dragonHP = 100; // Example HP for the dragon
+    cout << "You attack the dragon." << endl;
+    dragonHP -= 10; // Example attack reduces dragon HP
 
+    if (dragonHP <= 0) {
+        cout << "You have defeated the dragon and saved the kingdom!" << endl;
+        defeated_dragon = true;
+    } else {
+        cout << "The dragon defeats you with a fiery breath!" << endl;
+        game_over = true;
+    }
+}
 // prints that the players have lost (all of them died)
-void win_screen() {}
-
+void win_screen() {
+ cout << "Congratulations! You have won the game!" << endl;
+}
 // prints that the players have won
-void lose_screen() {}
+void lose_screen() {
+  cout << "Game Over. You have been defeated." << endl;
+}
