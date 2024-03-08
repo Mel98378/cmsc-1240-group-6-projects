@@ -36,7 +36,8 @@
         Camron:
         Evan:
         Lavender: file setup and specs, character_creation() and related functions, logic in start_game()
-        Teddy: 
+        Teddy: town(), mineshaft(), castle() setup (excluding detailed battle system), win and lose screens, movement
+               between areas
     
     
     Naming Conventions (please follow):
@@ -351,8 +352,8 @@ void start_game() {
           returning nothing, though make sure to list
           the locations)
 */
-void town() {}
-cout << "You are in the town. Where do you want to go next?" << endl;
+void town() {
+    cout << "You are in the town. Where do you want to go next?" << endl;
     cout << "1. Mineshaft" << endl;
     cout << "2. Castle" << endl;
     cout << "Enter the number of your choice: ";
@@ -368,24 +369,26 @@ cout << "You are in the town. Where do you want to go next?" << endl;
         cout << "Invalid choice. Please choose again." << endl;
         town(); // Recursive call to let the player choose again
     }
-                                                         }// the mineshaft
-                                                           /*
-                                                           the location where the players battle random enemies
-                                                            (except for the dragon). You may add as many enemies
-                                                             as you want, provided you make the proper modifications
-                                                             to the parallel arrays above the prototype section under
-                                                             enemy data
+}
 
-                                                                   this function must:
-                                                                - change `game_over` to true if every player
-                                                               has died
-                                                                   - after an encounter, allow the users to leave 
-                                                                    (you can do this just by changinge `party_location` 
-                                                                to 1 or 2 and then returning nothing, though make sure 
-                                                                     to list the locations)
-                                                                     */
-void mineshaft() {}
-cout << "You encounter a random enemy in the mineshaft!" << endl;
+// the mineshaft
+/*
+    the location where the players battle random enemies
+    (except for the dragon). You may add as many enemies
+    as you want, provided you make the proper modifications
+    to the parallel arrays above the prototype section under
+    enemy data
+
+    this function must:
+        - change `game_over` to true if every player
+          has died
+        - after an encounter, allow the users to leave 
+          (you can do this just by changinge `party_location` 
+          to 1 or 2 and then returning nothing, though make sure 
+          to list the locations)
+*/
+void mineshaft() {
+    cout << "You encounter a random enemy in the mineshaft!" << endl;
     // Simulate a basic encounter
     int enemyHP = 30; // Example HP for an enemy
     cout << "You attack the enemy." << endl;
@@ -413,6 +416,7 @@ cout << "You encounter a random enemy in the mineshaft!" << endl;
         game_over = true;
     }
 }
+
 // the castle
 /*
     the location where the party encounters the final boss
@@ -427,8 +431,8 @@ cout << "You encounter a random enemy in the mineshaft!" << endl;
         - change `won` to true if 
           the dragon is defeated, then return nothing
 */
-void castle() {}
-cout << "You face the dragon in the final battle!" << endl;
+void castle() {
+    cout << "You face the dragon in the final battle!" << endl;
     // Simplified battle against dragon
     int dragonHP = 100; // Example HP for the dragon
     cout << "You attack the dragon." << endl;
@@ -442,6 +446,7 @@ cout << "You face the dragon in the final battle!" << endl;
         game_over = true;
     }
 }
+
 // prints that the players have lost (all of them died)
 void win_screen() {
  cout << "Congratulations! You have won the game!" << endl;
