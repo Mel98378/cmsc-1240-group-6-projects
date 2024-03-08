@@ -35,9 +35,7 @@
     --------------
         Camron:
         Evan:
-        Lavender: file setup and specs, constants setup, main(), character_creation(), get_num_players(), 
-                  validate_input(), print_input_error(), print_game_information(), player_choose_info(),
-                  print_class_options(), game_loop()
+        Lavender: file setup and specs, character_creation() and related functions, logic in start_game()
         Teddy: 
     
     
