@@ -52,7 +52,6 @@
 #include <cstring>
 #include <regex>
 #include <functional>
-#include <conio.h>
 using namespace std;
 
 // general data
@@ -310,6 +309,7 @@ void print_class_options() {
 #ifdef __APPLE__
 #include <cstdlib>
 void wait_until_key() {
+    cout << "\n\nPress any key to continue...";
     system("read")
 }
 #else
