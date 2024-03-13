@@ -310,7 +310,7 @@ void print_class_options() {
 #include <cstdlib>
 void wait_until_key() {
     cout << "\n\nPress any key to continue...";
-    system("read")
+    system("read");
 }
 #else
 void wait_until_key() {
