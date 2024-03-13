@@ -52,7 +52,6 @@
 #include <cstring>
 #include <regex>
 #include <functional>
-#include <conio.h>
 using namespace std;
 
 // general data
@@ -152,6 +151,9 @@ void print_game_information();
 void player_choose_info();
 void print_class_options();
 
+// wait until any key pressed
+void wait_until_key();
+
 // game mechanics prototypes
 void start_game();
 void town();
@@ -242,8 +244,8 @@ void print_game_information() {
              << "\t- base damage: " << CLASS_BASE_DAMAGE[i] << endl;
     }
 
-    cout << endl << "Press any key to continue. " << endl << endl;
-    getch(); // waits until a player pressey a key
+    // waits until a player pressey a key
+    wait_until_key();
 
     cout << "Player information:" << endl
          << "----------------------" << endl
@@ -255,9 +257,9 @@ void print_game_information() {
          << "To win, defeat the dragon in the castle." << endl
          << "If all party members die, you lose." << endl
          << "Good luck." << endl << endl;
-
-    cout << "Press any key to continue. " << endl << endl; 
-    getch(); // waits until a player presses a key
+    
+    // waits until a player presses a key
+    wait_until_key();
 }
 
 // prompt each player to input their name and class
@@ -303,6 +305,18 @@ void print_class_options() {
         cout << "\t[" << i << "] " << CLASS_TYPES[i] << endl;
     }
 }
+
+#ifdef __APPLE__
+#include <cstdlib>
+void wait_until_key() {
+    cout << "\n\nPress any key to continue...";
+    system("read");
+}
+#else
+void wait_until_key() {
+    system("pause");
+}
+#endif
 
 // the primary game loop
 /* 
