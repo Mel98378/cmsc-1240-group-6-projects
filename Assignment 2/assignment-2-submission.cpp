@@ -164,6 +164,10 @@ void castle();
 void win_screen();
 void lose_screen();
 
+// Combat prototypes
+void player_attack(int playerIndex, int enemyIndex);
+void enemy_attack(int enemyIndex);
+
 int main() {
     // set random seed
     srand(time(nullptr));
@@ -402,13 +406,36 @@ void town() {
           to list the locations)
 */
 void mineshaft() {
-    cout << "You encounter a random enemy in the mineshaft!" << endl;
-    // Simulate a basic encounter
-    int enemyHP = 30; // Example HP for an enemy
-    cout << "You attack the enemy." << endl;
-    enemyHP -= 10; // Example attack reduces enemy HP
-
-    if (enemyHP <= 0) {
+    //Combat system start
+    int enemyIndex = rand() % MAX_ENEMIES;
+    cout << "You encounter a " << ENEMY_TYPES[enemyIndex] << " in the mineshaft" << endl;
+    while (enemy_hp[enemyIndex] > 0) {
+        //Player's turn
+        for (int i = 0; i < num_players; i++) {
+            if (player_hp[i] > 0) {
+                cout << "Player " << i + 1 << ", choose your action:" << endl;
+                cout << "1. Attack" << endl;
+                cout << "Enter the number of your choice: " << endl;
+                int action;
+                cin >> action;
+                if (action == 1) {
+                    player_attack(i, enemyIndex);
+                } else {
+                    cout << "Invalid input. Try Again!" << endl;
+                }
+                if (enemy_hp[enemyIndex] <= 0) break;
+            }
+        }
+        //Enemy's turn
+        if (enemy_hp[enemyIndex] > 0) {
+            enemy_attack(enemyIndex);
+        }
+    }
+    if (!game_over) {
+        cout << "You defeated the " << ENEMY_TYPES[enemyIndex] << "!" << endl;
+    } //Combat system end
+    
+    if (enemy_hp[enemyIndex] <= 0) {
         cout << "Enemy defeated!" << endl;
         // Allow players to choose where to go next
         cout << "Where do you want to go next?" << endl;
@@ -468,4 +495,26 @@ void win_screen() {
 // prints that the players have won
 void lose_screen() {
   cout << "Game Over. You have been defeated." << endl;
+}
+
+void player_attack(int playerIndex, int enemyIndex) {
+    int damage = player_damage[playerIndex];
+    enemy_hp[enemyIndex] -= damage;
+    cout << "Player " << playerIndex + 1 << " attacks the " << ENEMY_TYPES[enemyIndex] << " for " << damage << " damage!" << endl;
+    if (enemy_hp[enemyIndex] <= 0) {
+        cout << "The " << ENEMY_TYPES[enemyIndex] << " has been defeated!" << endl;
+    }
+}
+
+void enemy_attack(int enemyIndex) {
+    for (int i = 0; i < num_players; i++) {
+        if (player_hp[i] > 0) {
+            int damage = enemy_damage[enemyIndex];
+            player_hp[i] -= damage;
+            cout << "The " << ENEMY_TYPES[enemyIndex] << " attacks player " << i + 1 << " for " << damage << " damage!" << endl;
+            if (player_hp[i] <= 0) {
+                cout << "Player " << i + 1 << " has been defeated!" << endl;
+            }
+        }
+    }
 }
