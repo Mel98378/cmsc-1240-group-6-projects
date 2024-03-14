@@ -52,6 +52,7 @@
 #include <cstring>
 #include <regex>
 #include <functional>
+#include <windows.h>
 using namespace std;
 
 // general data
@@ -118,8 +119,10 @@ bool player_four_items[NUM_ITEMS] = {true, true, true, true};
 */
 const int MAX_ENEMIES = 4; // per encounter
 const char* ENEMY_TYPES[MAX_ENEMIES] = {"dragon", "shrimp", "mosquito", "mimic"};
-int enemy_hp[MAX_ENEMIES] = {100, 5, 30, 40};
-int enemy_damage[MAX_ENEMIES] = {30, 100, 10, 10};
+const int BASE_ENEMY_HP[MAX_ENEMIES] = {100, 5, 30, 40};
+const int BASE_ENEMY_DAMAGE[MAX_ENEMIES] = {30, 100, 10, 10};
+int current_enemy_hp;
+int current_enemy_damage;
 
 // location data
 /*
@@ -297,8 +300,11 @@ void player_choose_info() {
         string name = player_names[i];
         message = name + ", choose a class: ";
 
-        // update the player's class
-        player_class[i] = validate_input(message, reg, condition_str, condition);
+        // update the player's information
+        int selection = validate_input(message, reg, condition_str, condition);
+        player_class[i] = selection;
+        player_hp[i] = CLASS_BASE_HEALTH[selection];
+        player_damage[i] = CLASS_BASE_DAMAGE[selection];
     }
 }
 
@@ -406,10 +412,60 @@ void town() {
           to list the locations)
 */
 void mineshaft() {
+    /*
+        Combat system suggestions:
+
+        Having a separate function that does the entirety of one
+        battle would be the best solution (in my opinion), since
+        you wouldn't have to rewrite basically everything the exact
+        same except for the enemy type (which is the only thing that 
+        changes between mineshaft battles and the castle battle).
+
+        I would recommend doing all the logic inside a function with 
+        an appropriate name (something like battle() or battle_simulation()),
+        which take in an int corresponding to the type of enemy that
+        the party will be fighting.
+
+        Then, use that int to determine the current_hp and current_damage
+        (as i've shown below)
+        
+        The rest should be pretty much the same as here, but having it 
+        in its own function will make this function (mineshaft()) as well
+        as castle() much more readable. 
+
+        A simplified version might look like:
+        -------------------------------------
+        void battle(int enemy_type) { // <- maybe include multiple enemies or number of enemies as well
+            current_enemy_hp = enemy_type_base_hp; // <- for multiple enemies you could use an array
+            current_enemy_damage = enemy_type_base_damage; // ^
+            while(true) {
+                player_turn() // <- players can attack enemies, use items (i know evan wanted to 
+                                                                              do more item stuff)
+                enemy_turn() // <- players can only die in an enemy's turn
+                
+                if(all players dead) {
+                    game_over = true;
+                    print_defeat_message();
+                    return; // <- logic in start_game() will handle stopping the game
+                }
+                if(all enemies defeated) break;
+            }
+
+            // outside loop, enemy defeated
+            enemy_defeated_message();
+            choose_next_action(); // <- can either battle again or leave
+        }
+
+
+
+        See the comments I made below for additional concerns.
+    */
+
     //Combat system start
     int enemyIndex = rand() % MAX_ENEMIES;
     cout << "You encounter a " << ENEMY_TYPES[enemyIndex] << " in the mineshaft" << endl;
-    while (enemy_hp[enemyIndex] > 0) {
+    current_enemy_hp = BASE_ENEMY_HP[enemyIndex];
+    while (current_enemy_hp > 0) {
         //Player's turn
         for (int i = 0; i < num_players; i++) {
             if (player_hp[i] > 0) {
@@ -421,21 +477,34 @@ void mineshaft() {
                 if (action == 1) {
                     player_attack(i, enemyIndex);
                 } else {
+                    
+                    // this line does not let the user try again
+                    // instead, it just moves to the next player's action
                     cout << "Invalid input. Try Again!" << endl;
                 }
-                if (enemy_hp[enemyIndex] <= 0) break;
+                if (current_enemy_hp <= 0) break;
             }
         }
         //Enemy's turn
-        if (enemy_hp[enemyIndex] > 0) {
+        if (current_enemy_hp > 0) {
             enemy_attack(enemyIndex);
         }
     }
+
+    // no need to check if the game is over; ideally,
+    // if you make it out of the above while loop,
+    // that means that the enemy has been defeated
+    //
+    // (inside the above while loop, check if all players are dead;
+    //  if they are, set `game_over` to true and return)
     if (!game_over) {
         cout << "You defeated the " << ENEMY_TYPES[enemyIndex] << "!" << endl;
     } //Combat system end
     
-    if (enemy_hp[enemyIndex] <= 0) {
+    // the checks for if all the enemies have been defeated 
+    // should also take place within the while loop above
+    // (this change will make the logic below redundant)
+    if (current_enemy_hp <= 0) {
         cout << "Enemy defeated!" << endl;
         // Allow players to choose where to go next
         cout << "Where do you want to go next?" << endl;
@@ -455,6 +524,10 @@ void mineshaft() {
         // If not all enemies are defeated
         cout << "You have been defeated by the enemy!" << endl;
         game_over = true;
+        // you should only set `game_over` to true during the battle
+        // (if all of the players have died).
+        // another note: any time you set `game_over` to true, 
+        // you must return.
     }
 }
 
@@ -499,9 +572,9 @@ void lose_screen() {
 
 void player_attack(int playerIndex, int enemyIndex) {
     int damage = player_damage[playerIndex];
-    enemy_hp[enemyIndex] -= damage;
+    current_enemy_hp -= damage;
     cout << "Player " << playerIndex + 1 << " attacks the " << ENEMY_TYPES[enemyIndex] << " for " << damage << " damage!" << endl;
-    if (enemy_hp[enemyIndex] <= 0) {
+    if (current_enemy_hp <= 0) {
         cout << "The " << ENEMY_TYPES[enemyIndex] << " has been defeated!" << endl;
     }
 }
@@ -509,7 +582,7 @@ void player_attack(int playerIndex, int enemyIndex) {
 void enemy_attack(int enemyIndex) {
     for (int i = 0; i < num_players; i++) {
         if (player_hp[i] > 0) {
-            int damage = enemy_damage[enemyIndex];
+            int damage = current_enemy_damage;
             player_hp[i] -= damage;
             cout << "The " << ENEMY_TYPES[enemyIndex] << " attacks player " << i + 1 << " for " << damage << " damage!" << endl;
             if (player_hp[i] <= 0) {
