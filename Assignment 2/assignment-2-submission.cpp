@@ -33,7 +33,7 @@
 
     Contributions:
     --------------
-        Camron:
+        Camron: Combat system (battle(), dragon_battle())
         Evan:
         Lavender: file setup and specs, character_creation() and related functions, logic in start_game()
         Teddy: town(), mineshaft(), castle() setup (excluding detailed battle system), win and lose screens, movement
@@ -52,7 +52,6 @@
 #include <cstring>
 #include <regex>
 #include <functional>
-#include <windows.h>
 using namespace std;
 
 // general data
@@ -117,10 +116,14 @@ bool player_four_items[NUM_ITEMS] = {true, true, true, true};
     dragon: castle
     fish, mosquito, mimic: mineshaft
 */
-const int MAX_ENEMIES = 4; // per encounter
-const char* ENEMY_TYPES[MAX_ENEMIES] = {"dragon", "shrimp", "mosquito", "mimic"};
-const int BASE_ENEMY_HP[MAX_ENEMIES] = {100, 5, 30, 40};
-const int BASE_ENEMY_DAMAGE[MAX_ENEMIES] = {30, 100, 10, 10};
+const int MINESHAFT_ENEMIES = 3;
+const char* ENEMY_TYPES[MINESHAFT_ENEMIES] = {"shrimp", "mosquito", "mimic"};
+const int BASE_ENEMY_HP[MINESHAFT_ENEMIES] = {5, 30, 40};
+const int BASE_ENEMY_DAMAGE[MINESHAFT_ENEMIES] = {100, 10, 10};
+const int FINAL_BOSS = 1;
+const char* FINAL_BOSS_TYPE[FINAL_BOSS] = {"dragon"};
+int FINAL_BOSS_HP[FINAL_BOSS] = {100};
+const int FINAL_BOSS_DAMAGE[FINAL_BOSS] = {30};
 int current_enemy_hp;
 int current_enemy_damage;
 
@@ -168,8 +171,9 @@ void win_screen();
 void lose_screen();
 
 // Combat prototypes
-void player_attack(int playerIndex, int enemyIndex);
-void enemy_attack(int enemyIndex);
+void battle();
+void dragon_battle();
+bool defeated_enemy = false;
 
 int main() {
     // set random seed
@@ -380,7 +384,7 @@ void town() {
     cout << "You are in the town. Where do you want to go next?" << endl;
     cout << "1. Mineshaft" << endl;
     cout << "2. Castle" << endl;
-    cout << "Enter the number of your choice: ";
+    cout << "Enter the number of your choice: \n";
      
     int choice;
     cin >> choice;
@@ -418,10 +422,10 @@ void mineshaft() {
         Having a separate function that does the entirety of one
         battle would be the best solution (in my opinion), since
         you wouldn't have to rewrite basically everything the exact
-        same except for the enemy type (which is the only thing that 
+        same except for the enemy type (which is the only thing that
         changes between mineshaft battles and the castle battle).
 
-        I would recommend doing all the logic inside a function with 
+        I would recommend doing all the logic inside a function with
         an appropriate name (something like battle() or battle_simulation()),
         which take in an int corresponding to the type of enemy that
         the party will be fighting.
@@ -429,9 +433,9 @@ void mineshaft() {
         Then, use that int to determine the current_hp and current_damage
         (as i've shown below)
         
-        The rest should be pretty much the same as here, but having it 
+        The rest should be pretty much the same as here, but having it
         in its own function will make this function (mineshaft()) as well
-        as castle() much more readable. 
+        as castle() much more readable.
 
         A simplified version might look like:
         -------------------------------------
@@ -439,7 +443,7 @@ void mineshaft() {
             current_enemy_hp = enemy_type_base_hp; // <- for multiple enemies you could use an array
             current_enemy_damage = enemy_type_base_damage; // ^
             while(true) {
-                player_turn() // <- players can attack enemies, use items (i know evan wanted to 
+                player_turn() // <- players can attack enemies, use items (i know evan wanted to
                                                                               do more item stuff)
                 enemy_turn() // <- players can only die in an enemy's turn
                 
@@ -461,6 +465,7 @@ void mineshaft() {
         See the comments I made below for additional concerns.
     */
 
+<<<<<<< Updated upstream
     //Combat system start
     int enemyIndex = rand() % MAX_ENEMIES;
     cout << "You encounter a " << ENEMY_TYPES[enemyIndex] << " in the mineshaft" << endl;
@@ -500,35 +505,31 @@ void mineshaft() {
     if (!game_over) {
         cout << "You defeated the " << ENEMY_TYPES[enemyIndex] << "!" << endl;
     } //Combat system end
+=======
+    //Combat system
+    int randomIndex = rand() % MINESHAFT_ENEMIES;
+    const char* enemyType = ENEMY_TYPES[randomIndex];
+    cout << "\nYou encounter a " << enemyType << "\n" << endl;
+    battle();
+>>>>>>> Stashed changes
     
-    // the checks for if all the enemies have been defeated 
-    // should also take place within the while loop above
-    // (this change will make the logic below redundant)
     if (current_enemy_hp <= 0) {
-        cout << "Enemy defeated!" << endl;
         // Allow players to choose where to go next
         cout << "Where do you want to go next?" << endl;
         cout << "1. Return to town" << endl;
-        cout << "2. Continue in the mineshaft" << endl;
-        cout << "Enter the number of your choice: ";
-
+        cout << "2. Continue in the mineshaft\n" << endl;
+        cout << "Enter the number of your choice: \n";
+        
         int choice;
         cin >> choice;
-
+        
         if (choice == 1) {
             party_location = 0; // Go back to Town
         } else {
             mineshaft(); // Continue exploring the Mineshaft
         }
-    } else {
-        // If not all enemies are defeated
-        cout << "You have been defeated by the enemy!" << endl;
-        game_over = true;
-        // you should only set `game_over` to true during the battle
-        // (if all of the players have died).
-        // another note: any time you set `game_over` to true, 
-        // you must return.
     }
+    
 }
 
 // the castle
@@ -546,18 +547,11 @@ void mineshaft() {
           the dragon is defeated, then return nothing
 */
 void castle() {
-    cout << "You face the dragon in the final battle!" << endl;
-    // Simplified battle against dragon
-    int dragonHP = 100; // Example HP for the dragon
-    cout << "You attack the dragon." << endl;
-    dragonHP -= 10; // Example attack reduces dragon HP
-
-    if (dragonHP <= 0) {
-        cout << "You have defeated the dragon and saved the kingdom!" << endl;
-        defeated_dragon = true;
+    if (!defeated_enemy) {
+        cout << "You need to defeat an enemy before entering the castle." << endl;
+        party_location = 0;
     } else {
-        cout << "The dragon defeats you with a fiery breath!" << endl;
-        game_over = true;
+        dragon_battle();
     }
 }
 
@@ -570,24 +564,91 @@ void lose_screen() {
   cout << "Game Over. You have been defeated." << endl;
 }
 
-void player_attack(int playerIndex, int enemyIndex) {
-    int damage = player_damage[playerIndex];
-    current_enemy_hp -= damage;
-    cout << "Player " << playerIndex + 1 << " attacks the " << ENEMY_TYPES[enemyIndex] << " for " << damage << " damage!" << endl;
-    if (current_enemy_hp <= 0) {
-        cout << "The " << ENEMY_TYPES[enemyIndex] << " has been defeated!" << endl;
-    }
+void battle() {
+    current_enemy_hp = BASE_ENEMY_HP[MINESHAFT_ENEMIES];
+    current_enemy_damage = BASE_ENEMY_DAMAGE[MINESHAFT_ENEMIES];
+    
+        while (true) {
+            //Player's turn in mineshaft
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                if (player_hp[i] > 0) { //Player is alive
+                    cout << "Player " << i << ", choose your action:" << endl;
+                    cout << "1. Attack\n" << endl;
+                    cout << "Enter the number of your choice: \n" << endl;
+                    int action;
+                    cin >> action;
+                    
+                    switch (action) {
+                        case 1: //Player attacks the enemy
+                            current_enemy_hp -= player_damage[MAX_PLAYERS];
+                            break;
+                        default:
+                            cout << "\nInvalid Input. Try again.\n" << endl;
+                    }
+                }
+            }
+            //Check if enemy is alive
+            if (current_enemy_hp <= 0) {
+                cout << "\nEnemy defeated!\n" << endl;
+                defeated_enemy = true;
+                break;
+            } else {
+                // If not all enemies are defeated
+                cout << "You have been defeated by the enemy!\n" << endl;
+                game_over = true;
+                return;
+            }
+        }
 }
 
-void enemy_attack(int enemyIndex) {
-    for (int i = 0; i < num_players; i++) {
-        if (player_hp[i] > 0) {
-            int damage = current_enemy_damage;
-            player_hp[i] -= damage;
-            cout << "The " << ENEMY_TYPES[enemyIndex] << " attacks player " << i + 1 << " for " << damage << " damage!" << endl;
+void dragon_battle() {
+    cout << "You enter the castle!" << endl;
+    cout << "The doors slam behind you, and you stand face to face with a dragon!\n" << endl;
+    
+    int dragon_hp = FINAL_BOSS_HP[0];
+    
+     while(true) {
+        for (int i = 0; i < MAX_PLAYERS; i++) {
             if (player_hp[i] <= 0) {
-                cout << "Player " << i + 1 << " has been defeated!" << endl;
+                continue;
             }
+            cout << "Player " << i << ", choose your action:" << endl;
+            cout << "1. Attack\n" << endl;
+            cout << "Enter the number of your choice: \n" << endl;
+            int action;
+            cin >> action;
+            
+            if (action == 1) {
+                dragon_hp -= player_damage[i];
+                cout << "You deal " << player_damage[i] << " damage to the dragon!" << endl;
+            }
+            
+        }
+         
+        if (dragon_hp <= 0) {
+             cout << "you have defeated the dragon!" << endl;
+             defeated_dragon = true;
+             return;
+         }
+         
+         //Dragons turn
+         for (int i = 0; i < MAX_PLAYERS; i++) {
+             if (player_hp[i] <= 0) {
+                 continue;
+             }
+             int damage = FINAL_BOSS_DAMAGE[0];
+             player_hp[i] -= damage;
+             cout << "The dragon attacks player " << i << " and deals " << damage << " damage." << endl;
+             if (player_hp[i] <= 0) {
+                 cout << "Player " << i << " has been defeated!" << endl;
+             }
+         }
+         
+        for (int i = 0; i < num_players; i++) {
+            cout << "\nAll players have been defeated. Game Over!" << endl;
+            game_over = true;
+            return;
         }
     }
 }
+
