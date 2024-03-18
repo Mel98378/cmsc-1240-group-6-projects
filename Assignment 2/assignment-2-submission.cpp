@@ -464,6 +464,7 @@ void mineshaft() {
 
         See the comments I made below for additional concerns.
     */
+<<<<<<< Updated upstream
 
 <<<<<<< Updated upstream
     //Combat system start
@@ -510,6 +511,9 @@ void mineshaft() {
     int randomIndex = rand() % MINESHAFT_ENEMIES;
     const char* enemyType = ENEMY_TYPES[randomIndex];
     cout << "\nYou encounter a " << enemyType << "\n" << endl;
+    battle();
+>>>>>>> Stashed changes
+=======
     battle();
 >>>>>>> Stashed changes
     
@@ -568,6 +572,13 @@ void battle() {
     current_enemy_hp = BASE_ENEMY_HP[MINESHAFT_ENEMIES];
     current_enemy_damage = BASE_ENEMY_DAMAGE[MINESHAFT_ENEMIES];
     
+<<<<<<< Updated upstream
+=======
+    int randomIndex = rand() % MINESHAFT_ENEMIES;
+    const char* enemyType = ENEMY_TYPES[randomIndex];
+    cout << "\nYou encounter a " << enemyType << "\n" << endl;
+    
+>>>>>>> Stashed changes
         while (true) {
             //Player's turn in mineshaft
             for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -583,7 +594,12 @@ void battle() {
                             current_enemy_hp -= player_damage[MAX_PLAYERS];
                             break;
                         default:
+<<<<<<< Updated upstream
                             cout << "\nInvalid Input. Try again.\n" << endl;
+=======
+                            cout << "Invlaid Input. Please try again" << endl;
+                            i -= 1;
+>>>>>>> Stashed changes
                     }
                 }
             }
@@ -593,10 +609,31 @@ void battle() {
                 defeated_enemy = true;
                 break;
             } else {
+<<<<<<< Updated upstream
                 // If not all enemies are defeated
                 cout << "You have been defeated by the enemy!\n" << endl;
                 game_over = true;
                 return;
+=======
+                // If all players are defeated
+                if (player_hp[MAX_PLAYERS] <= 0) {
+                    game_over = true;
+                    return;
+                }
+            }
+            
+            //Enemy's turn
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                if (player_hp[i] <= 0) {
+                    continue;
+                }
+                // damage line here
+                player_hp[i] -= current_enemy_damage;
+                cout << "The " << enemyType << " attacks player " << i << " and deals " << current_enemy_damage << " damage." << endl;
+                if (player_hp[i] <= 0) {
+                    cout << "Player " << i << " has been defeated!" << endl;
+                }
+>>>>>>> Stashed changes
             }
         }
 }
@@ -606,11 +643,58 @@ void dragon_battle() {
     cout << "The doors slam behind you, and you stand face to face with a dragon!\n" << endl;
     
     int dragon_hp = FINAL_BOSS_HP[0];
+<<<<<<< Updated upstream
+=======
+    int damage = FINAL_BOSS_DAMAGE[0];
+>>>>>>> Stashed changes
     
      while(true) {
         for (int i = 0; i < MAX_PLAYERS; i++) {
             if (player_hp[i] <= 0) {
                 continue;
+<<<<<<< Updated upstream
+=======
+            }
+            cout << "Player " << i << ", choose your action:" << endl;
+            cout << "1. Attack\n" << endl;
+            cout << "Enter the number of your choice: \n" << endl;
+            int action;
+            cin >> action;
+            
+            if (action == 1) {
+                dragon_hp -= player_damage[i];
+                cout << "You deal " << player_damage[i] << " damage to the dragon!" << endl;
+            } else {
+                cout << "Invalid input. Please Try Again." << endl;
+                i -= 1;
+            }
+            
+        }
+         
+        if (dragon_hp <= 0) {
+             cout << "you have defeated the dragon!" << endl;
+             defeated_dragon = true;
+             return;
+         }
+         
+         //Dragons turn
+         for (int i = 0; i < MAX_PLAYERS; i++) {
+             if (player_hp[i] <= 0) {
+                 continue;
+             }
+             // damage line here
+             player_hp[i] -= damage;
+             cout << "The dragon attacks player " << i << " and deals " << damage << " damage." << endl;
+             if (player_hp[i] <= 0) {
+                 cout << "Player " << i << " has been defeated!" << endl;
+             }
+         }
+         
+        for (int i = 0; i < num_players; i++) {
+            if (player_hp[MAX_PLAYERS] <= 0) {
+                game_over = true;
+                return;
+>>>>>>> Stashed changes
             }
             cout << "Player " << i << ", choose your action:" << endl;
             cout << "1. Attack\n" << endl;
