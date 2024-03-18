@@ -34,16 +34,9 @@
     Contributions:
     --------------
         Camron: Combat system (battle(), dragon_battle())
-        Evan:
+        Evan: Item system (use_item(), player_has_items(), treasure())
         Lavender: file setup and specs, character_creation() and related functions, logic in start_game()
-        Teddy: town(), mineshaft(), castle() setup (excluding detailed battle system), win and lose screens, movement
-               between areas
-    
-    
-    Naming Conventions (please follow):
-    -----------------------------------
-    methods, functions, and non-constant variables: snake_case
-    constants: SCREAMING_SNAKE_CASE
+        Teddy: town(), mineshaft(), castle() setup, win_screen(), lose_screen()
 */
 
 #include <iostream>
@@ -55,8 +48,8 @@
 using namespace std;
 
 // general data
-bool game_over;
-bool defeated_dragon;
+bool game_over = false;
+bool defeated_dragon = false;
 
 // player data
 const int MAX_PLAYERS = 4; // per game
@@ -78,11 +71,7 @@ int player_damage[MAX_PLAYERS]; // current player damage (affected by items)
 const int NUM_CLASSES = 3;
 const char* CLASS_TYPES[NUM_CLASSES] = {"archer", "swordsman", "alchemist"};
 const int CLASS_BASE_DAMAGE[NUM_CLASSES] = {10, 10, 5};
-const int CLASS_BASE_HEALTH[NUM_CLASSES] = {30, 40, 20};
-const char* ARCHER_ATTACKS[] = {"shoot", "stab"};
-const char* SWORDSMAN_ATTACKS[] = {"slash", "poke"};
-const char* ALCHEMIST_ATTACKS[] = {"splash poison", "heal"}; /* the alchemist is not very good 
-                                                                at healing (does damage) */
+const int CLASS_BASE_HEALTH[NUM_CLASSES] = {60, 80, 50};
 
 // item data
 /* 
@@ -93,21 +82,19 @@ const char* ALCHEMIST_ATTACKS[] = {"splash poison", "heal"}; /* the alchemist is
     rock: throwable, causes damage
     big rock: throwable, causes big damage
 
-    item information:
-    -----------------
-    items can only be used once ever (to keep system simple)
-    each player starts off with all 4 items
+    information:
+    ------------
+    items are attained through chests after defeating an enemy
+    first chest always contains 2 health potions for each player,
+    but have one random item for each player after
 */
 const int NUM_ITEMS = 4;
 const char* ITEMS[NUM_ITEMS] = {"health potion", "vitamin gummy", "rock", "big rock"};
 const char* ITEM_DESCRIPTIONS[NUM_ITEMS] = {"heals 10 hp", "increases damage by 10",
                                             "causes 5 hp of damage", "causes 20 hp of damage"};
 const int ITEM_EFFECTS[NUM_ITEMS] = {10, 10, 5, 20};
-bool player_one_items[NUM_ITEMS] = {true, true, true, true};
-bool player_two_items[NUM_ITEMS] = {true, true, true, true};
-bool player_three_items[NUM_ITEMS] = {true, true, true, true};
-bool player_four_items[NUM_ITEMS] = {true, true, true, true};
-
+int player_items[MAX_PLAYERS][NUM_ITEMS];
+int first_treasure = true;
 
 // enemy data
 /*
@@ -173,6 +160,9 @@ void lose_screen();
 // Combat prototypes
 void battle();
 void dragon_battle();
+bool player_has_items(int);
+void use_item(int);
+void treasure();
 bool defeated_enemy = false;
 
 int main() {
@@ -480,7 +470,8 @@ void battle() {
         for (int i = 0; i < MAX_PLAYERS; i++) {
             if (player_hp[i] > 0) { //Player is alive
                 cout << "Player " << i << ", choose your action:" << endl;
-                cout << "1. Attack\n" << endl;
+                cout << "1. Attack\n";
+                cout << "2. Use an Item\n" << endl; 
                 cout << "Enter the number of your choice: \n" << endl;
                 int action;
                 cin >> action;
@@ -488,6 +479,14 @@ void battle() {
                 switch (action) {
                     case 1: //Player attacks the enemy
                         current_enemy_hp -= player_damage[i];
+                        break;
+                    case 2: // player chooses to use an item
+                        if(!player_has_items(i)) {
+                            cout << "You don't have any items. Please select another option.";
+                            i--;
+                            continue;
+                        }
+                        use_item(i);
                         break;
                     default:
                         cout << "Invlaid Input. Please try again" << endl;
@@ -498,6 +497,7 @@ void battle() {
                 if (current_enemy_hp <= 0) {
                     cout << "\nEnemy defeated!\n" << endl;
                     defeated_enemy = true;
+                    treasure();
                     return;
                 }
             }
@@ -506,7 +506,7 @@ void battle() {
         //Enemy's turn
         int target;
         do {
-            int target = rand() % num_players;
+            target = rand() % num_players;
         }
         while(player_hp[target] <= 0);
         // damage line here
@@ -519,9 +519,8 @@ void battle() {
         // seeing if there is at least one player still alive
         bool player_alive = false;
         for(int i = 0; i < num_players; i++) {
-            if(player_hp[i] < 0) {
+            if(player_hp[i] > 0) {
                 player_alive = true;
-                break;
             }
         }
 
@@ -537,30 +536,41 @@ void dragon_battle() {
     cout << "You enter the castle!" << endl;
     cout << "The doors slam behind you, and you stand face to face with a dragon!\n" << endl;
     
-    int dragon_hp = FINAL_BOSS_HP[0];
-    int damage = FINAL_BOSS_DAMAGE[0];
+    current_enemy_hp = FINAL_BOSS_HP[0];
+    current_enemy_damage = FINAL_BOSS_DAMAGE[0];
     
      while(true) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (int i = 0; i < num_players; i++) {
             if (player_hp[i] <= 0) {
                 continue;
             }
             cout << "Player " << i << ", choose your action:" << endl;
-            cout << "1. Attack\n" << endl;
+            cout << "1. Attack\n";
+            cout << "2. Use an Item" << endl; 
             cout << "Enter the number of your choice: \n" << endl;
             int action;
             cin >> action;
             
             if (action == 1) {
-                dragon_hp -= player_damage[i];
+                current_enemy_hp -= player_damage[i];
                 cout << "You deal " << player_damage[i] << " damage to the dragon!" << endl;
-            } else {
+            } 
+            else if (action == 2) { // player chooses to use an item
+                if(!player_has_items(i)) {
+                    cout << "You don't have any items. Please select another option.";
+                    i--;
+                    continue;
+                }
+                use_item(i);
+                break;
+            } 
+            else {
                 cout << "Invalid input. Please Try Again." << endl;
                 i -= 1;
             }
 
             // check if players have killed dragon
-            if (dragon_hp <= 0) {
+            if (current_enemy_hp <= 0) {
                 cout << "you have defeated the dragon!" << endl;
                 defeated_dragon = true;
                 return;
@@ -573,8 +583,8 @@ void dragon_battle() {
                  continue;
              }
              // damage line here
-             player_hp[i] -= damage;
-             cout << "The dragon attacks player " << i << " and deals " << damage << " damage." << endl;
+             player_hp[i] -= current_enemy_damage;
+             cout << "The dragon attacks player " << i << " and deals " << current_enemy_damage << " damage." << endl;
              if (player_hp[i] <= 0) {
                  cout << "Player " << i << " has been defeated!" << endl;
              }
@@ -597,3 +607,70 @@ void dragon_battle() {
     }
 }
 
+bool player_has_items(int player_num) {
+    bool result = false;
+    for(int i = 0; i < NUM_ITEMS; i++) {
+        if(player_items[player_num][i] > 0) {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
+void use_item(int player_num) {
+
+    // prints the items the player has
+    cout << "Items available: " << endl;
+    for(int i = 0; i < NUM_ITEMS; i++){
+        cout << "\t[" << i << "] " << ITEMS[i] << " (" << ITEM_DESCRIPTIONS[i] << "): You have " << player_items[player_num][i] << endl;
+    }
+
+    int choice;
+
+    // make sure the player chooses a valid choice
+    do {
+        cout << "\nSelect an item: ";
+        cin >> choice;
+    } while (choice > 3 || choice < 0);
+
+    cout << "\nYou used a " << ITEMS[choice] << "." << endl;
+    switch (choice) {
+            case 0: 
+                player_hp[player_num] += 10;
+                break;
+            case 1: 
+                player_damage[player_num] += 10;
+                break;
+            case 2: 
+                current_enemy_hp -= 10;
+                break;
+            case 3: 
+                current_enemy_hp -= 20;
+                break;
+            default:
+                cout << "something has gone wrong.";
+    }
+}
+
+// one item for each player
+void treasure() {
+    
+    // first chest always has the same things (2 health potions)
+    if(first_treasure) {
+        cout << "Each player gets 2 health potions!" << endl;
+        for(int i = 0; i < num_players; i++) {
+            player_items[i][0] += 2;
+        }
+        first_treasure = false;
+    }
+
+    // subsequent chests contain one random item for each player
+    else{
+        for(int i = 0; i < num_players; i++) {
+            int item = rand() % NUM_ITEMS;
+            cout << player_names[i] << " got a " << ITEMS[item] << "!" << endl;
+            player_items[i][item] += 1;
+        }
+    }
+}
