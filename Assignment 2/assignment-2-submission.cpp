@@ -624,43 +624,6 @@ void dragon_battle() {
             if (player_hp[MAX_PLAYERS] <= 0) {
                 game_over = true;
                 return;
-            }
-            cout << "Player " << i << ", choose your action:" << endl;
-            cout << "1. Attack\n" << endl;
-            cout << "Enter the number of your choice: \n" << endl;
-            int action;
-            cin >> action;
-            
-            if (action == 1) {
-                dragon_hp -= player_damage[i];
-                cout << "You deal " << player_damage[i] << " damage to the dragon!" << endl;
-            }
-            
-        }
-         
-        if (dragon_hp <= 0) {
-             cout << "you have defeated the dragon!" << endl;
-             defeated_dragon = true;
-             return;
-         }
-         
-         //Dragons turn
-         for (int i = 0; i < MAX_PLAYERS; i++) {
-             if (player_hp[i] <= 0) {
-                 continue;
-             }
-             int damage = FINAL_BOSS_DAMAGE[0];
-             player_hp[i] -= damage;
-             cout << "The dragon attacks player " << i << " and deals " << damage << " damage." << endl;
-             if (player_hp[i] <= 0) {
-                 cout << "Player " << i << " has been defeated!" << endl;
-             }
-         }
-         
-        for (int i = 0; i < num_players; i++) {
-            cout << "\nAll players have been defeated. Game Over!" << endl;
-            game_over = true;
-            return;
         }
     }
 }
