@@ -416,54 +416,6 @@ void town() {
           to list the locations)
 */
 void mineshaft() {
-    /*
-        Combat system suggestions:
-
-        Having a separate function that does the entirety of one
-        battle would be the best solution (in my opinion), since
-        you wouldn't have to rewrite basically everything the exact
-        same except for the enemy type (which is the only thing that
-        changes between mineshaft battles and the castle battle).
-
-        I would recommend doing all the logic inside a function with
-        an appropriate name (something like battle() or battle_simulation()),
-        which take in an int corresponding to the type of enemy that
-        the party will be fighting.
-
-        Then, use that int to determine the current_hp and current_damage
-        (as i've shown below)
-        
-        The rest should be pretty much the same as here, but having it
-        in its own function will make this function (mineshaft()) as well
-        as castle() much more readable.
-
-        A simplified version might look like:
-        -------------------------------------
-        void battle(int enemy_type) { // <- maybe include multiple enemies or number of enemies as well
-            current_enemy_hp = enemy_type_base_hp; // <- for multiple enemies you could use an array
-            current_enemy_damage = enemy_type_base_damage; // ^
-            while(true) {
-                player_turn() // <- players can attack enemies, use items (i know evan wanted to
-                                                                              do more item stuff)
-                enemy_turn() // <- players can only die in an enemy's turn
-                
-                if(all players dead) {
-                    game_over = true;
-                    print_defeat_message();
-                    return; // <- logic in start_game() will handle stopping the game
-                }
-                if(all enemies defeated) break;
-            }
-
-            // outside loop, enemy defeated
-            enemy_defeated_message();
-            choose_next_action(); // <- can either battle again or leave
-        }
-
-
-
-        See the comments I made below for additional concerns.
-    */
     battle();
     
     if (current_enemy_hp <= 0) {
@@ -518,59 +470,68 @@ void lose_screen() {
 }
 
 void battle() {
-    current_enemy_hp = BASE_ENEMY_HP[MINESHAFT_ENEMIES];
-    current_enemy_damage = BASE_ENEMY_DAMAGE[MINESHAFT_ENEMIES];
-
     int randomIndex = rand() % MINESHAFT_ENEMIES;
+    current_enemy_hp = BASE_ENEMY_HP[randomIndex];
+    current_enemy_damage = BASE_ENEMY_DAMAGE[randomIndex];
     const char* enemyType = ENEMY_TYPES[randomIndex];
     cout << "\nYou encounter a " << enemyType << "\n" << endl;
 
-        while (true) {
-            //Player's turn in mineshaft
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                if (player_hp[i] > 0) { //Player is alive
-                    cout << "Player " << i << ", choose your action:" << endl;
-                    cout << "1. Attack\n" << endl;
-                    cout << "Enter the number of your choice: \n" << endl;
-                    int action;
-                    cin >> action;
-                    
-                    switch (action) {
-                        case 1: //Player attacks the enemy
-                            current_enemy_hp -= player_damage[MAX_PLAYERS];
-                            break;
-                        default:
-                            cout << "Invlaid Input. Please try again" << endl;
-                            i -= 1;
-                    }
+    while (true) {
+        //Player's turn in mineshaft
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (player_hp[i] > 0) { //Player is alive
+                cout << "Player " << i << ", choose your action:" << endl;
+                cout << "1. Attack\n" << endl;
+                cout << "Enter the number of your choice: \n" << endl;
+                int action;
+                cin >> action;
+                
+                switch (action) {
+                    case 1: //Player attacks the enemy
+                        current_enemy_hp -= player_damage[i];
+                        break;
+                    default:
+                        cout << "Invlaid Input. Please try again" << endl;
+                        i -= 1;
                 }
-            }
-            //Check if enemy is alive
-            if (current_enemy_hp <= 0) {
-                cout << "\nEnemy defeated!\n" << endl;
-                defeated_enemy = true;
-                break;
-            } else {
-                // If all players are defeated
-                if (player_hp[MAX_PLAYERS] <= 0) {
-                    game_over = true;
-                    return;
-                }
-            }
-            
-            //Enemy's turn
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                if (player_hp[i] <= 0) {
-                    continue;
-                }
-                // damage line here
-                player_hp[i] -= current_enemy_damage;
-                cout << "The " << enemyType << " attacks player " << i << " and deals " << current_enemy_damage << " damage." << endl;
-                if (player_hp[i] <= 0) {
-                    cout << "Player " << i << " has been defeated!" << endl;
+
+                //Check if enemy is alive
+                if (current_enemy_hp <= 0) {
+                    cout << "\nEnemy defeated!\n" << endl;
+                    defeated_enemy = true;
+                    break;
                 }
             }
         }
+        
+        //Enemy's turn
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (player_hp[i] <= 0) {
+                continue;
+            }
+            // damage line here
+            player_hp[i] -= current_enemy_damage;
+            cout << "The " << enemyType << " attacks player " << i << " and deals " << current_enemy_damage << " damage." << endl;
+            if (player_hp[i] <= 0) {
+                cout << "Player " << i << " has been defeated!" << endl;
+            }
+        }
+
+        // seeing if there is at least one player still alive
+        bool player_alive = false;
+        for(int i = 0; i < num_players; i++) {
+            if(player_hp[i] < 0) {
+                player_alive = true;
+                break;
+            }
+        }
+
+        // game over if no players are alive
+        if(!player_alive) {
+            game_over = true;
+            return;
+        }
+    }
 }
 
 void dragon_battle() {
@@ -598,14 +559,14 @@ void dragon_battle() {
                 cout << "Invalid input. Please Try Again." << endl;
                 i -= 1;
             }
-            
+
+            // check if players have killed dragon
+            if (dragon_hp <= 0) {
+                cout << "you have defeated the dragon!" << endl;
+                defeated_dragon = true;
+                return;
+            }
         }
-         
-        if (dragon_hp <= 0) {
-             cout << "you have defeated the dragon!" << endl;
-             defeated_dragon = true;
-             return;
-         }
          
          //Dragons turn
          for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -620,10 +581,19 @@ void dragon_battle() {
              }
          }
          
-        for (int i = 0; i < num_players; i++) {
-            if (player_hp[MAX_PLAYERS] <= 0) {
-                game_over = true;
-                return;
+        // seeing if there is at least one player still alive
+        bool player_alive = false;
+        for(int i = 0; i < num_players; i++) {
+            if(player_hp[i] < 0) {
+                player_alive = true;
+                break;
+            }
+        }
+
+        // game over if no players are alive
+        if(!player_alive) {
+            game_over = true;
+            return;
         }
     }
 }
