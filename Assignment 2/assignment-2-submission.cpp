@@ -416,9 +416,10 @@ void town() {
           to list the locations)
 */
 void mineshaft() {
-    battle();
-    
-    if (current_enemy_hp <= 0) {
+    while(true) {
+        battle();
+        if(game_over) {return;}
+        
         // Allow players to choose where to go next
         cout << "Where do you want to go next?" << endl;
         cout << "1. Return to town" << endl;
@@ -430,11 +431,9 @@ void mineshaft() {
         
         if (choice == 1) {
             party_location = 0; // Go back to Town
-        } else {
-            mineshaft(); // Continue exploring the Mineshaft
+            return;
         }
     }
-    
 }
 
 // the castle
@@ -499,22 +498,22 @@ void battle() {
                 if (current_enemy_hp <= 0) {
                     cout << "\nEnemy defeated!\n" << endl;
                     defeated_enemy = true;
-                    break;
+                    return;
                 }
             }
         }
         
         //Enemy's turn
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            if (player_hp[i] <= 0) {
-                continue;
-            }
-            // damage line here
-            player_hp[i] -= current_enemy_damage;
-            cout << "The " << enemyType << " attacks player " << i << " and deals " << current_enemy_damage << " damage." << endl;
-            if (player_hp[i] <= 0) {
-                cout << "Player " << i << " has been defeated!" << endl;
-            }
+        int target;
+        do {
+            int target = rand() % num_players;
+        }
+        while(player_hp[target] <= 0);
+        // damage line here
+        player_hp[target] -= current_enemy_damage;
+        cout << "The " << enemyType << " attacks player " << target << " and deals " << current_enemy_damage << " damage." << endl;
+        if (player_hp[target] <= 0) {
+            cout << "Player " << target << " has been defeated!" << endl;
         }
 
         // seeing if there is at least one player still alive
@@ -569,7 +568,7 @@ void dragon_battle() {
         }
          
          //Dragons turn
-         for (int i = 0; i < MAX_PLAYERS; i++) {
+         for (int i = 0; i < num_players; i++) {
              if (player_hp[i] <= 0) {
                  continue;
              }
