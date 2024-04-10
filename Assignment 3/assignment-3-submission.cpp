@@ -7,8 +7,8 @@
     Linked List Implementation
         - Implement a linked list to store records
         - Each record should contain two fields: name (string) and age (int)
-        - Implement functions for creating a new linked list, adding a record,
-          deleting a record, and printing the list
+        - ** Implement functions for creating a new linked list, adding a record,
+          deleting a record, and printing the list **
     Sorted Insertion
         - Ensure that the list remains sorted alphabetically at all times
         - When adding a new record, insert it into the correct position in the 
@@ -27,14 +27,14 @@
 
     Notes:
     ------
-    (lavender): i think that it would be best if we kept 2 copies of the list
-                at all times (one sorted by name and the other by age); that 
-                way, we won't have to re-sort the list every time the user
-                changes the metric they want the list to be printed by/inserted into
+    (lavender): i would have like to split up the work more easily with
+                header files, but unfortunately we have to submit a single
+                source file 
 
-    (lavender): i would also have liked to use header files instead of function prototypes
-                in order to more easily separate our workspaces, but we have to submit 
-                only a singe C++ source file
+    (lavender): for the sorting part, after some messing around i think that
+                the best option is to keep the list sorted by name, and 
+                basically reverse bubble sort the list if the user wants to
+                print the list by age, keeping the main list still by age
 
 
     Contributions:
