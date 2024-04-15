@@ -21,7 +21,7 @@
           deleting a record, and printing the list **
     Sorted Insertion
         - Ensure that the list remains sorted alphabetically at all times
-        - When adding a new record, insert it into the correct position in the 
+        - When adding a new record, insert it into the correct position in the
           list based on the alphabetical order of names
     Deletion
         - Implement functionality to delete any or all records in the list
@@ -39,10 +39,10 @@
     ------
     (lavender): i would have like to split up the work more easily with
                 header files, but unfortunately we have to submit a single
-                source file 
+                source file
 
     (lavender): for the sorting part, after some messing around i think that
-                the best option is to keep the list sorted by name, and 
+                the best option is to keep the list sorted by name, and
                 basically reverse bubble sort the list if the user wants to
                 print the list by age, keeping the main list still by age
 
@@ -51,17 +51,17 @@
                 code as if they were, since their parameter and return types
                 should be the same as they are now (i don't reccomend changing
                 them without consulting the group). this is especially important
-                for teddy, who i've assigned to do ui; most of what you'll be 
+                for teddy, who i've assigned to do ui; most of what you'll be
                 doing is printing options to the user, getting their input,
                 and calling the related functions in order to enact what
                 the user chose. if you need help, please reach out to me.
 
-    (lavender): in my opinion, the hardest parts of this homework are the 
+    (lavender): in my opinion, the hardest parts of this homework are the
                 sorted insertion and the printing by age (personally i could
                 not really find any easy ways to do this; printing by name is
                 relatively easy, since that is what the list is usually sorted
                 by, but doing it by ascending age essentially requires you to
-                re-sort the list, which can be difficult to write). 
+                re-sort the list, which can be difficult to write).
 
 
     Contributions:
@@ -244,7 +244,7 @@ Node* delete_node(Node* list, int age, char* name) {
                 prev_node = nullptr;
 
                 // since `list` was the previous node, it should also
-                // be set to nullptr 
+                // be set to nullptr
                 list = nullptr;
 
                 // finally, return the new list head
@@ -280,3 +280,37 @@ Node* delete_node(Node* list, int age, char* name) {
     printf("Node with name %s and age %d not found.\n", name, age);
     return list;
 }
+
+//MARK: insert_record()
+Node* insert_record(Node* list, char* name, int age) {
+    
+    // New node for the record to be inserted
+    Node* new_node = (Node*) malloc(sizeof(Node));
+    new_node->data = (Record*) malloc(sizeof(Record));
+    new_node->data->name = (char*) malloc(16 * sizeof(char));
+    new_node->next = nullptr;
+    
+    // Initilaize
+    new_node->data->name = name;
+    new_node->data->age = age;
+    
+    // If list is empty or if the new record should be inserted at the beginning
+    if (list == nullptr || strcmp(name, list->data->name) < 0) {
+        new_node->next = list;
+        return new_node;
+    }
+    
+    // Goes through list to find correct placement
+    Node* current = list;
+    while (current->next != nullptr && strcmp(name, current->next->data->name) > 0) {
+        current = current->next;
+    }
+    
+    // Insert the new record
+    new_node->next = current->next;
+    current->next = new_node;
+    
+    return list;
+}
+
+
