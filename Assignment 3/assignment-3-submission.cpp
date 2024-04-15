@@ -89,14 +89,14 @@ struct Node;
 struct Record;
 
 // list creation (lavender)
-Node* new_list(Node*);
+Node* new_list(Node*, int, char*);
 
 // list deletion (lavender)
 Node* delete_list(Node*);
-Node* delete_node(Node*, char*, int);
+Node* delete_node(Node*, int, char*);
 
 // record insertion (camron)
-Node* insert_record(Node*, char*, int);
+Node* insert_record(Node*, int, char*);
 
 // list printing (evan)
 void print_list(Node*);
@@ -153,6 +153,7 @@ Node* new_list(Node* list, int age, char* name) {
     // initialize the first node's record with information
     new_list->data->name = name;
     new_list->data->age = age;
+    new_list->next = nullptr;
 
     return new_list;
 }
@@ -282,7 +283,7 @@ Node* delete_node(Node* list, int age, char* name) {
 }
 
 //MARK: insert_record()
-Node* insert_record(Node* list, char* name, int age) {
+Node* insert_record(Node* list, int age, char* name) {
     
     // New node for the record to be inserted
     Node* new_node = (Node*) malloc(sizeof(Node));
