@@ -42,6 +42,13 @@
                 basically reverse bubble sort the list if the user wants to
                 print the list by age, keeping the main list still by age
 
+    (lavender): for user input, there are a few things to keep in mind;
+                the main thing is that for names, make sure that the name
+                is no longer than 15 characters + 1 null terminator long, 
+                and make sure that all ith characters between names are the
+                same case (i suggest having the first letter uppercase and 
+                the rest lowercase)
+
 
     Contributions:
     --------------
