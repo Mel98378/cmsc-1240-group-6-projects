@@ -1,1 +1,2 @@
-// This file contains the battle functions.
+#pragma once
+// This file contains the battle functions

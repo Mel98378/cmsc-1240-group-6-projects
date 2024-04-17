@@ -22,5 +22,8 @@
         - Achieve this by opening and reading the save file
 */
 
+#include <cstdio>
+
 int main() {
+    printf("hi");
 }
