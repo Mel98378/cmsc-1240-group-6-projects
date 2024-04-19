@@ -54,7 +54,7 @@
     --------------
     Camron: sorted insertion
     Evan: list printing
-    Lavender: file setup, structs, creation/deletion
+    Lavender: file setup, structs, list and node deletion
     Teddy: user interface
 */
 
@@ -66,6 +66,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <cctype>
+#include <vector>
+#include <algorithm>
 
 
 
@@ -74,9 +76,6 @@
 // Structs (lavender)
 struct Node;
 struct Record;
-
-// list creation (lavender)
-Node* new_list(Node*, int, char*);
 
 // list deletion (lavender)
 Node* delete_list(Node*);
@@ -87,6 +86,8 @@ Node* insert_record(Node*, int, char*);
 
 // list printing (evan)
 void print_list(Node*);
+void printListByName(Node*);
+void printListByAge(Node*);
 
 // ui (teddy)
 void program_loop();
@@ -117,32 +118,6 @@ struct Record {
     char* name;
     int age;
 };
-
-// create a new list, given name and age
-//MARK: new_list()
-Node* new_list(Node* list, int age, char* name) {
-
-    // make sure the list isn't already defined
-    if(list != nullptr) {
-        puts("List already exists.");
-        return list;
-    }
-
-    // otherwise, allocate memory for all pieces of data
-    Node* new_list = (Node*) malloc(sizeof(Node));
-    new_list->data = (Record*) malloc(sizeof(Record));
-    new_list->data->name = (char*) malloc(16 * sizeof(char));
-    
-    // no need to allocate memory for new_list->next, since if it points to
-    // a Node, it will already have itself allocated
-
-    // initialize the first node's record with information
-    new_list->data->name = name;
-    new_list->data->age = age;
-    new_list->next = nullptr;
-
-    return new_list;
-}
 
 // delete the entirety of a list
 //MARK: delete_list()
@@ -209,7 +184,7 @@ Node* delete_node(Node* list, int age, char* name) {
     while(curr_node != nullptr) {
 
         // found a matching node
-        if(curr_node->data->age == age && curr_node->data->name == name) {
+        if(curr_node->data->age == age && strcmp(curr_node->data->name, name) == 0) {
 
             // 2 cases: node to delete is the head, or it is a body (or tail)
 
@@ -222,12 +197,10 @@ Node* delete_node(Node* list, int age, char* name) {
 
                 // free the memory
                 free(prev_node->data->name);
-                free(prev_node->data);
-                free(prev_node);
-
-                // set the freed pointers to nullptr
                 prev_node->data->name = nullptr;
+                free(prev_node->data);
                 prev_node->data = nullptr;
+                free(prev_node);
                 prev_node = nullptr;
 
                 // since `list` was the previous node, it should also
@@ -246,12 +219,10 @@ Node* delete_node(Node* list, int age, char* name) {
 
             // then free all the allocated memory from the node
             free(curr_node->data->name);
-            free(curr_node->data);
-            free(curr_node);
-
-            // set the freed pointers to nullptr
             curr_node->data->name = nullptr;
+            free(curr_node->data);
             curr_node->data = nullptr;
+            free(curr_node);
             curr_node = nullptr;
 
             // return the list head
@@ -299,15 +270,17 @@ Node* insert_record(Node* list, int age, char* name) {
     
     return list;
 }
+
 //*** teddy ***//
 // User Interface implementation
 void program_loop() {
     Node* list = nullptr; // Start with no list
     char option;
-    char name[16];
     int age;
 
     while (true) {
+        char* name = (char*) malloc(16 * sizeof(char));
+
         // Display options to the user
         puts("\nMenu:");
         puts("1. Add Record");
@@ -333,7 +306,6 @@ void program_loop() {
                 printf("Enter age of the record to delete: ");
                 scanf("%d", &age);
                 list = delete_node(list, age, name);
-                puts("Record deleted (if found).");
                 break;
 
             case '3': // Print all records
@@ -351,16 +323,59 @@ void program_loop() {
     }
 }
 
-// Function to print all records in the list
-void print_list(Node* list) {
-    Node* current = list;
-    if (current == nullptr) {
-        puts("List is empty.");
-    } else {
-        puts("List of Records:");
-        while (current != nullptr) {
-            printf("Name: %s, Age: %d\n", current->data->name, current->data->age);
-            current = current->next;
-        }
+void print_list(Node* head) {
+    printf("Print by name or age [n/a]: ");
+    char input = 0;
+    scanf(" %c", &input);
+    puts("");
+
+    switch(input) {
+        case 'n': printListByName(head); break;
+        case 'a': printListByAge(head); break;
+        default: puts("Invalid option."); print_list(head); break;
     }
+}
+
+// Function to print the linked list in order of insertion (sorted by name)
+void printListByName(Node* head) {
+    if (!head) {
+        puts("List is empty.");
+        return;
+    }
+
+    Node* current = head;
+    puts("{");
+    while (current) {
+        printf("\tName: %s, Age: %d\n", current->data->name, current->data->age);
+        current = current->next;
+    }
+    puts("}");
+}
+
+// Function to print the linked list in order of age, from youngest to oldest
+void printListByAge(Node* head) {
+    if (!head) {
+        puts("List is empty.");
+        return;
+    }
+
+    // Copy the linked list into a vector for sorting
+    std::vector<Node*> nodes;
+    Node* current = head;
+    while (current) {
+        nodes.push_back(current);
+        current = current->next;
+    }
+
+    // Custom comparator for sorting by age
+    std::sort(nodes.begin(), nodes.end(), [](const Node* a, const Node* b) {
+        return a->data->age < b->data->age;
+    });
+
+    // Print the sorted list
+    puts("{");
+    for (const auto& node : nodes) {
+        printf("\tName: %s, Age: %d\n", node->data->name, node->data->age);
+    }
+    puts("}");
 }
