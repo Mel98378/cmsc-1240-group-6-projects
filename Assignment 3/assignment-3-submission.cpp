@@ -271,8 +271,8 @@ Node* insert_record(Node* list, int age, char* name) {
     return list;
 }
 
-//*** teddy ***//
 // User Interface implementation
+//MARK: program_loop()
 void program_loop() {
     Node* list = nullptr; // Start with no list
     char option;
@@ -323,6 +323,7 @@ void program_loop() {
     }
 }
 
+//MARK: print_list()
 void print_list(Node* head) {
     printf("Print by name or age [n/a]: ");
     char input = 0;
@@ -337,6 +338,7 @@ void print_list(Node* head) {
 }
 
 // Function to print the linked list in order of insertion (sorted by name)
+//MARK: printListByName()
 void printListByName(Node* head) {
     if (!head) {
         puts("List is empty.");
@@ -353,6 +355,7 @@ void printListByName(Node* head) {
 }
 
 // Function to print the linked list in order of age, from youngest to oldest
+//MARK: printListByAge()
 void printListByAge(Node* head) {
     if (!head) {
         puts("List is empty.");
