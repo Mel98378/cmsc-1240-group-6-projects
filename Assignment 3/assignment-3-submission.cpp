@@ -299,3 +299,68 @@ Node* insert_record(Node* list, int age, char* name) {
     
     return list;
 }
+//*** teddy ***//
+// User Interface implementation
+void program_loop() {
+    Node* list = nullptr; // Start with no list
+    char option;
+    char name[16];
+    int age;
+
+    while (true) {
+        // Display options to the user
+        puts("\nMenu:");
+        puts("1. Add Record");
+        puts("2. Delete Record");
+        puts("3. Print List");
+        puts("4. Exit");
+        printf("Select an option: ");
+        scanf(" %c", &option); // Read user input
+
+        switch (option) {
+            case '1': // Add a new record
+                printf("Enter name: ");
+                scanf("%15s", name); // Limit input to 15 characters for safety
+                printf("Enter age: ");
+                scanf("%d", &age);
+                list = insert_record(list, age, name);
+                puts("Record added.");
+                break;
+
+            case '2': // Delete a record
+                printf("Enter name of the record to delete: ");
+                scanf("%15s", name);
+                printf("Enter age of the record to delete: ");
+                scanf("%d", &age);
+                list = delete_node(list, age, name);
+                puts("Record deleted (if found).");
+                break;
+
+            case '3': // Print all records
+                print_list(list);
+                break;
+
+            case '4': // Exit the program
+                list = delete_list(list); // Clean up all nodes
+                puts("Exiting program.");
+                return; // Exit the program loop
+
+            default:
+                puts("Invalid option. Please try again.");
+        }
+    }
+}
+
+// Function to print all records in the list
+void print_list(Node* list) {
+    Node* current = list;
+    if (current == nullptr) {
+        puts("List is empty.");
+    } else {
+        puts("List of Records:");
+        while (current != nullptr) {
+            printf("Name: %s, Age: %d\n", current->data->name, current->data->age);
+            current = current->next;
+        }
+    }
+}
