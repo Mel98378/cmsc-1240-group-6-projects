@@ -1,0 +1,83 @@
+# this text file contains a sample for what saves will look like.
+# lines starting with an octothorp should be treated as comments (ignored).
+
+
+# with comments:
+1{ # slot 1
+    l{t} # location of the party (town)
+    0{ # player 0 information
+        n{lavender}
+        i{
+            t{b} # t{(item type)}; bow
+            t{r} # rock
+        }
+        r{a} # archer role
+        h{40} # 40 health
+    }
+    1{
+        n{abcdefg}
+        i{
+            t{s} # sword
+        }
+        r{w} # warrior role
+        h{5}
+    }
+    2{
+        n{waw}
+        i{
+            t{t} # staff
+            t{v} # vitamin
+        }
+        r{m} # mage
+        h{5}
+    }
+    3{
+        n{aoeunsth}
+        i{
+            t{b}
+            t{h} # health potion
+        }
+        r{a}
+        h{100}
+    }
+}
+
+#without comments:
+1{
+    l{t}
+    0{
+        n{lavender}
+        i{
+            t{b}
+            t{r}
+        }
+        r{a}
+        h{40}
+    }
+    1{
+        n{abcdefg}
+        i{
+            t{s}
+        }
+        r{w}
+        h{5}
+    }
+    2{
+        n{waw}
+        i{
+            t{t}
+            t{v}
+        }
+        r{m}
+        h{5}
+    }
+    3{
+        n{aoeunsth}
+        i{
+            t{b}
+            t{h}
+        }
+        r{a}
+        h{100}
+    }
+}
