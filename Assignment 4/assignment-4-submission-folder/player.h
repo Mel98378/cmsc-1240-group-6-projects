@@ -1,4 +1,5 @@
 #pragma once
+
 // This file includes structs and functions related to the players and party
 
 #include "area.h"
@@ -19,7 +20,7 @@ struct Player {
     int health;
 };
 
-// struct that represents the party
+// struct that represents the party (1-4 players)
 struct Party {
     Area location;
     Player* p0;
@@ -43,3 +44,9 @@ enum Role {
     // not used for player role; only for items
     Anyone 
 };
+
+// character creation (prompts for player choices form ui.h)
+Party* create_characters();
+
+// delete the party
+Party* delete_party(Party*);

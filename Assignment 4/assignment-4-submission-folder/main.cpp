@@ -20,10 +20,63 @@
         - Must save player's name and health at a minimum
     Include the ability to load the game from a previous playthrough 
         - Achieve this by opening and reading the save file
+
+
+    Header files:
+    -------------
+    Game: 
+        - main game loop
+    Player:
+        - game state enum
+        - player struct
+        - party struct
+        - inventory struct
+        - role struct
+        - character creation logic
+    UI: 
+        - all ui elements (printing and input)
+    Battle:
+        - battle systems
+        - enemy structs
+    Item: 
+        - contains items (main battle interaction)
+    Save:
+        - contains functions for writing and reading save data from the file
+        - reades from and writes to savedata.txt
+
+    
+    Notes:
+    ------
+    (lavender): just a reminder to everyone for building multifile projects: make
+                sure that your header files includes all the relevant files it uses
+                uses. in your terminal, cd into this folder (../assignment-4-submission-folder/),
+                and run `g++ *.cpp -o main` to get the executable
+
+    (lavender): above are just general pieces of information about what each header should
+                contain, but more details are available in the files themselves. for structs
+                and enums, they must be defined in the header file, but i think we should keep 
+                function definitions in source files (keeping declarations in headers)
+
+    (lavender): it was important that i got all the structs and enums set up alongside the 
+                function prototypes in each header file beacuse everyone will rely on them
+                being defined and having named parameters in order to actually implement
+                each section of the code
+
+    (lavender): also, for any helper functions that other header files don't need to access,
+                you should only declare them in the source file and not in the header file
+
+    
+    Contributions:
+    --------------
+    Evan: 
+    Camron: 
+    Lavender:
+    Teddy: 
+
 */
 
-#include <cstdio>
+#include "game.h"
 
 int main() {
-    printf("hi");
+    start_game();
 }

@@ -96,7 +96,7 @@ const int ITEM_EFFECTS[NUM_ITEMS] = {10, 10, 5, 20};
 int player_items[MAX_PLAYERS][NUM_ITEMS];
 int first_treasure = true;
 
-// enemy data -> constants file
+// enemy data
 /*
     location info:
     ----------
@@ -114,7 +114,7 @@ const int FINAL_BOSS_DAMAGE[FINAL_BOSS] = {30};
 int current_enemy_hp;
 int current_enemy_damage;
 
-// location data -> constants file
+// location data
 /*
     location information:
     ---------------------
