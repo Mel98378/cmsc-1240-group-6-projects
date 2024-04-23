@@ -42,7 +42,7 @@
     }
 }
 
-#without comments:
+# without comments:
 1{
     l{t}
     0{
@@ -81,3 +81,6 @@
         h{100}
     }
 }
+
+# condensed: 
+1{l{t}0{n{lavender}i{t{b}t{r}}r{a}h{40}}1{n{abcdefg}i{t{s}}r{w}h{5}}2{n{waw}i{t{t}t{v}}r{m}h{5}}3{n{aoeunsth}i{t{b}t{h}}r{a}h{100}}}
