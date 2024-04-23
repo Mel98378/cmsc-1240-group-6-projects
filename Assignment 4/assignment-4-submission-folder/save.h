@@ -3,20 +3,25 @@
 // this file contains everything related to saving and loading
 // there will be 3 save slots, can only save/load at specific points
 
-#include "area.h"
 #include "player.h"
 
 // struct that contains a snapshot of the party
 // includes location, items, health, names, etc.
+/*
+    save/load points: at the beginning of each area
+    ()
+*/
 struct Save_Data {
     Party* party_state;
 };
 
-// gets the data from a save
-Save_Data* load_from_save();
+// gets the data from a save slot (1-3)
+Save_Data* get_save_data(int);
 
-// makes or overwrites a save slot
-void save_game();
+void load_save_data();
+
+// makes or overwrites a save slot (given a save slot; 1, 2, or 3)
+void save_game(int);
 
 /*
     save data file will be a text file named savedata.txt; the format will look like this:
@@ -37,5 +42,10 @@ void save_game();
         ... (other players)
     }
     ... (other slots)
+
+    ------------
+    in the final version this will be condensed, and only 
+    navigated using brace counting (levels of nesting) and the 
+    chars that precede each opening brace    
 
 */

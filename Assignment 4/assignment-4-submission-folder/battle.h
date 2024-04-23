@@ -2,6 +2,8 @@
 
 // This file contains the battle functions
 
+#include "item.h"
+
 // Enemy struct
 struct Enemy {
     const char* name;
@@ -28,3 +30,7 @@ void mineshaft_battle();
 
 // castle battle function
 void castle_battle();
+
+// treasure/looting function (first treasure fixed, then random)
+// parameter should be whether it's the first treasure or not
+Item_Type treasure(bool);

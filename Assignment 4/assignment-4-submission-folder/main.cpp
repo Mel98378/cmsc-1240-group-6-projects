@@ -34,7 +34,8 @@
         - role struct
         - character creation logic
     UI: 
-        - all ui elements (printing and input)
+        - user input (after some thought, i think printing should be 
+          handled by the individual source files instead of trying to generalize them)
     Battle:
         - battle systems
         - enemy structs
@@ -70,13 +71,26 @@
     --------------
     Evan: 
     Camron: 
-    Lavender:
+    Lavender: project files organization/setup
     Teddy: 
 
+
+    TODO:
+    -----
+    reimplementations
+        - main program loop [game.h] (unassigned)
+        - area functions [area.h] (unassigned)
+        - battle functions and enemies [battle.h] (unassigned)
+        - character creation [player.h] (unassigned)
+        - player inventory management [player.h] (unassigned)
+        - item handling [item.h] (unassigned)
+        - input [ui.h] (unassigned)
+    new items
+        - saving and loading [save.h] (lavender)
 */
 
 #include "game.h"
 
 int main() {
-    start_game();
+    start_game(nullptr);
 }

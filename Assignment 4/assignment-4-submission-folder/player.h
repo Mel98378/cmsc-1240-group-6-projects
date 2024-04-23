@@ -22,7 +22,7 @@ struct Player {
 
 // struct that represents the party (1-4 players)
 struct Party {
-    Area location;
+    Area location; // used to determine the next location of the party
     Player* p0;
     Player* p1;
     Player* p2;
@@ -50,3 +50,9 @@ Party* create_characters();
 
 // delete the party
 Party* delete_party(Party*);
+
+// check whether a player has a specific item type
+bool player_has_item(Player*, Item_Type);
+
+// get the effect value (damage, healing, etc.) done by an item
+int get_item_effect_value(Item_Type);

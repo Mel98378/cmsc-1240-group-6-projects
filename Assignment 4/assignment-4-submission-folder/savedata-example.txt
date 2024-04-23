@@ -6,7 +6,7 @@
 1{ # slot 1
     l{t} # location of the party (town)
     0{ # player 0 information
-        n{lavender}
+        n{lavender} # player name
         i{
             t{b} # t{(item type)}; bow
             t{r} # rock
