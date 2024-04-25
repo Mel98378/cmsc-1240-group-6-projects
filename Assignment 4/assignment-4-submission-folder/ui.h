@@ -11,5 +11,16 @@ char get_menu_choice(const char*);
 char* get_string(int);
 
 // pauses the program until the user presses any key
-// (use for showing the user large pieces of text)
+/*
+    description:
+    ------------
+    this function will print something like "press a key to continue...",
+    and will not continue the program until a key is pressed.
+
+    because we have a team member on mac, it is likely you'll have to 
+    make one implementation for mac and one for windows;
+    use `#ifdef` to check whether the system is mac (`__APPLE__`) 
+    or windows (`_WIN32`), and make a function that works on the 
+    appropriate system.
+*/
 void wait_until_key();

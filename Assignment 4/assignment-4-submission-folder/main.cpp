@@ -69,24 +69,30 @@
     
     Contributions:
     --------------
-    Evan: 
-    Camron: 
-    Lavender: project files organization/setup
-    Teddy: 
+    Evan: items and treasure
+    Camron: combat system
+    Lavender: saving/loading, character creation, game (start_game only)
+    Teddy: ui, area functions
 
 
-    TODO:
+    TODO (by item):
     -----
     reimplementations
-        - main program loop [game.h] (unassigned)
-        - area functions [area.h] (unassigned)
-        - battle functions and enemies [battle.h] (unassigned)
-        - character creation [player.h] (unassigned)
-        - player inventory management [player.h] (unassigned)
-        - item handling [item.h] (unassigned)
-        - input [ui.h] (unassigned)
+        - main program loop [game.h] (lavender)
+        - area functions [area.h] (teddy)
+        - battle functions and enemies [battle.h] (camron)
+        - treasure function [treasure.h] (evan)
+        - character creation/deletion [player.h] (lavender)
+        - inventory [player.h] (evan)
+            - only player_num_items(), add_to_inventory(), and remove_from_inventory() 
+        - item information [item.h] (evan)
+        - input [ui.h] (teddy)
     new items
         - saving and loading [save.h] (lavender)
+
+    TODO (by name):
+    ----
+    evan: treasure, inventory, 
 */
 
 #include "game.h"

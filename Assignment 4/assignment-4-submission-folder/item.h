@@ -4,32 +4,32 @@
 
 #include "player.h" // for roles
 
-// general item struct for any particular items
-struct Item {
-    char* name;
-    char* description;
-
-    // (amount to damage, heal, etc.)
-    int effect_value;
-
-    // determines both who can use the item
-    Role user; 
-};
-
+// main weapons can only be used by specific roles;
+// all others can be used by anyone
 enum Item_Type {
+    // main weapons that only specific roles can use
+    Bow,
+    Sword,
+    Staff,
+
+    // items anyone can use
     Health_Potion,
     Vitamin,
     Rock,
     Big_Rock
 };
 
-// make an item based on its type
-Item* get_item_of_type(Item_Type);
-
-// get the main weapons for the player roles
-Item* get_bow();
-Item* get_sword();
-Item* get_staff();
-
-// delete an item
-Item* delete_item(Item*);
+// need to be able to get name, description, damage/effect,
+// and user of each item type
+/*
+    description:
+    ------------
+    write names, descriptions, effect values, and users
+    for each of the above item types; then,
+    use switch statements in each of these functions 
+    to return the relevant information to each item type.
+*/
+char* get_item_name(Item_Type);
+char* get_item_desc(Item_Type);
+int get_item_effect(Item_Type);
+Role get_item_user(Item_Type);

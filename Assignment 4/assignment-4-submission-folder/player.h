@@ -23,6 +23,7 @@ struct Player {
 // struct that represents the party (1-4 players)
 struct Party {
     Area location; // used to determine the next location of the party
+    Game_State state;
     Player* p0;
     Player* p1;
     Player* p2;
@@ -31,7 +32,7 @@ struct Party {
 
 // linked list that represents a player's inventory
 struct Inventory {
-    Item* item;
+    Item_Type item;
     Inventory* next;
 };
 
@@ -46,13 +47,32 @@ enum Role {
 };
 
 // character creation (prompts for player choices form ui.h)
+/*
+    description:
+    ------------
+    after determining how many players there will be, 
+    get the names and roles of each player, initialize their
+    inventories, and initialize the other party information.
+*/
 Party* create_characters();
 
 // delete the party
+/*
+    description:
+    ------------
+    deletes the party. must start with the smallest unfreed memory first,
+    moving up as levels of memory are freed.
+*/
 Party* delete_party(Party*);
 
 // check whether a player has a specific item type
-bool player_has_item(Player*, Item_Type);
+/*
+    description:
+    ------------
+    returns how many of a specific item any player has.
+*/
+int player_num_items(Player*, Item_Type);
 
-// get the effect value (damage, healing, etc.) done by an item
-int get_item_effect_value(Item_Type);
+// functions to add and remove items from player inventories
+void add_to_inventory(Player*, Item_Type);
+void remove_from_inventory(Player*, Item_Type);

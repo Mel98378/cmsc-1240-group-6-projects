@@ -73,7 +73,7 @@ const char* CLASS_TYPES[NUM_CLASSES] = {"archer", "swordsman", "alchemist"};
 const int CLASS_BASE_DAMAGE[NUM_CLASSES] = {10, 10, 5};
 const int CLASS_BASE_HEALTH[NUM_CLASSES] = {60, 80, 50};
 
-// item data -> constants file, item header
+// item data -> item header
 /* 
     item descriptions:
     ------------

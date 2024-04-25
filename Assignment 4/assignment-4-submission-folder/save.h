@@ -18,6 +18,7 @@ struct Save_Data {
 // gets the data from a save slot (1-3)
 Save_Data* get_save_data(int);
 
+// starts the game with the given save data
 void load_save_data();
 
 // makes or overwrites a save slot (given a save slot; 1, 2, or 3)
