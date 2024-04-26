@@ -1,7 +1,12 @@
-#pragma once
+#ifndef SAVE_H
+#define SAVE_H
 
 // this file contains everything related to saving and loading
 // there will be 3 save slots, can only save/load at specific points
+
+#include "player.h"
+
+struct Party;
 
 // gets the data from the save file; if there is no data,
 // default to creating new characters
@@ -25,3 +30,5 @@ void save_game();
     
     if a player's name is an empty string {'\0'}, then the player does not exist
 */
+
+#endif

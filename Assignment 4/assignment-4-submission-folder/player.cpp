@@ -2,6 +2,11 @@
 #include "area.h"
 #include "ui.h"
 
+#include <cstdlib>
+#include <cstdio>
+
+void delete_inventory(Inventory*);
+
 Party* create_characters() {
     Party* party = new Party();
     party->location = Area::Town;
@@ -20,23 +25,23 @@ Party* create_characters() {
         puts("");
 
         // print and get the player's role
-        puts("Role Options:")
+        puts("Role Options:");
         puts("\t[a] Archer");
         puts("\t[w] Warrior");
         puts("\t[m] Mage");
         printf("%s, select your role: ", p->name);
-        p->role = get_menu_choice("awm") - '0';
+        p->role = (Role)(get_menu_choice("awm") - '0');
 
         // set the player health and add the role's main weapon
         p->health = get_role_health(p->role);
-        add_to_inventory(p, p->role); // main weapons correspond to same numbers as roles
+        add_to_inventory(p, (Item_Type)(int)p->role); // main weapons correspond to same numbers as roles
 
         // add it to the correct player
         switch(i) {
             case 0: party->p0 = p;
             case 1: party->p1 = p;
             case 2: party->p2 = p;
-            case 3: party->p3 = p
+            case 3: party->p3 = p;
         }
     }
 
@@ -60,10 +65,10 @@ Party* delete_party(Party* party) {
         p_to_delete = nullptr;
     }
 
-    p0 = nullptr;
-    p1 = nullptr;
-    p2 = nullptr;
-    p3 = nullptr;
+    party->p0 = nullptr;
+    party->p1 = nullptr;
+    party->p2 = nullptr;
+    party->p3 = nullptr;
 }
 
 int player_num_items(Player* player, Item_Type item) {
@@ -91,7 +96,7 @@ void delete_inventory(Inventory* inv) {
     Inventory* to_del = inv;
     Inventory* next = nullptr;
 
-    while(inv->next != nullptr;) {
+    while(inv->next != nullptr) {
         next = inv->next;
 
         delete inv;

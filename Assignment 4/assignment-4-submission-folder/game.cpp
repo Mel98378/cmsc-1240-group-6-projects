@@ -1,8 +1,10 @@
 #include "game.h"
 #include "save.h"
 #include "ui.h"
-#include "player.h"
 #include "area.h"
+
+#include <cstdlib>
+#include <cstdio>
 
 // local file prototypes
 void game_loop(Party*);
@@ -16,7 +18,7 @@ void start_game() {
     char choice = get_menu_choice("yn");
     puts("");
 
-    Party* party;
+    Party* party = nullptr;
 
     switch(choice) {
         case 'y': party = get_save_data();

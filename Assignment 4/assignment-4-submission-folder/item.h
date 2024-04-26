@@ -1,8 +1,11 @@
-#pragma once
+#ifndef ITEM_H
+#define ITEM_H
 
 // This file contains structs and functions related to items
 
 #include "role.h"
+
+enum Role;
 
 // main weapons can only be used by specific roles;
 // all others can be used by anyone
@@ -33,3 +36,5 @@ char* get_item_name(Item_Type);
 char* get_item_desc(Item_Type);
 int get_item_effect(Item_Type);
 Role get_item_user(Item_Type);
+
+#endif

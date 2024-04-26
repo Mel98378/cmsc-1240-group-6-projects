@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAME_H
+#define GAME_H
 
 // contains the start of the game;
 // this function will link most of the other header files together 
@@ -18,3 +19,5 @@
     party->location field inside the party struct.
 */
 void start_game();
+
+#endif

@@ -1,6 +1,11 @@
-#pragma once
+#ifndef AREA_H
+#define AREA_H
 
 // This file contains all the logic for the location functions
+
+#include "player.h"
+
+struct Party;
 
 enum Area {
     Town,
@@ -52,3 +57,5 @@ void mineshaft(Party*);
     you should only give the party the option to save right before starting the battle
 */
 void castle(Party*);
+
+#endif

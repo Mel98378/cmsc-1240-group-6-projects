@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UI_H
+#define UI_H
 
 // this file contains all input functions for the players
 
@@ -25,3 +26,5 @@ char* get_string(int);
     appropriate system.
 */
 void wait_until_key();
+
+#endif

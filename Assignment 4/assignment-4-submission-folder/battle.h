@@ -1,6 +1,10 @@
-#pragma once
+#ifndef BATTLE_H
+#define BATTLE_H
 
 // This file contains the battle functions
+#include "player.h"
+
+struct Party;
 
 // Enemy struct
 struct Enemy {
@@ -60,3 +64,5 @@ void mineshaft_battle(Party*);
     the game state accordingly and return.
 */
 void castle_battle(Party*);
+
+#endif

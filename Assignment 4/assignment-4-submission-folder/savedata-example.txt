@@ -1,86 +1,14 @@
 # this text file contains a sample for what saves will look like.
 # lines starting with an octothorp should be treated as comments (ignored).
 
+location=%d
+enemies=%d
+p0=name:%s inv:%s role:%d health:%d
+p1=name:%s inv:%s role:%d health:%d
+p2=name:%s inv:%s role:%d health:%d
+p3=name:%s inv:%s role:%d health:%d
 
-# with comments:
-1{ # slot 1
-    l{t} # location of the party (town)
-    0{ # player 0 information
-        n{lavender} # player name
-        i{
-            t{b} # t{(item type)}; bow
-            t{r} # rock
-        }
-        r{a} # archer role
-        h{40} # 40 health
-    }
-    1{
-        n{abcdefg}
-        i{
-            t{s} # sword
-        }
-        r{w} # warrior role
-        h{5}
-    }
-    2{
-        n{waw}
-        i{
-            t{t} # staff
-            t{v} # vitamin
-        }
-        r{m} # mage
-        h{5}
-    }
-    3{
-        n{aoeunsth}
-        i{
-            t{b}
-            t{h} # health potion
-        }
-        r{a}
-        h{100}
-    }
-}
-
-# without comments:
-1{
-    l{t}
-    0{
-        n{lavender}
-        i{
-            t{b}
-            t{r}
-        }
-        r{a}
-        h{40}
-    }
-    1{
-        n{abcdefg}
-        i{
-            t{s}
-        }
-        r{w}
-        h{5}
-    }
-    2{
-        n{waw}
-        i{
-            t{t}
-            t{v}
-        }
-        r{m}
-        h{5}
-    }
-    3{
-        n{aoeunsth}
-        i{
-            t{b}
-            t{h}
-        }
-        r{a}
-        h{100}
-    }
-}
-
-# condensed: 
-1{l{t}0{n{lavender}i{t{b}t{r}}r{a}h{40}}1{n{abcdefg}i{t{s}}r{w}h{5}}2{n{waw}i{t{t}t{v}}r{m}h{5}}3{n{aoeunsth}i{t{b}t{h}}r{a}h{100}}}
+# enums can be represented by integers,
+# and the name and inventory can be represented with strings
+# for inventories, each character of a string will be a number
+# related to an item of the same value in `Item_Types`
