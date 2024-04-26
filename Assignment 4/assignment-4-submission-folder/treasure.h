@@ -4,5 +4,5 @@
 
 #include "item.h"
 
-// returns a random item type (must be usable by anyone)
+// returns a random item type (must not be a role-specific item)
 Item_Type treasure();
