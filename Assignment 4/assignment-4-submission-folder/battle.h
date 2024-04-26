@@ -2,8 +2,6 @@
 
 // This file contains the battle functions
 
-#include "item.h"
-
 // Enemy struct
 struct Enemy {
     const char* name;
@@ -50,7 +48,7 @@ Enemy* delete_enemy(Enemy*);
     if all the players in the party die, change the party's game state
     (to Game_State::Lost) and return.
 */
-void mineshaft_battle();
+void mineshaft_battle(Party*);
 
 // castle battle function
 /*
@@ -61,4 +59,4 @@ void mineshaft_battle();
     same lose condition as above, but if the players win, then set 
     the game state accordingly and return.
 */
-void castle_battle();
+void castle_battle(Party*);

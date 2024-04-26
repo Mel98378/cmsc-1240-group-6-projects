@@ -98,5 +98,5 @@
 #include "game.h"
 
 int main() {
-    start_game(nullptr);
+    start_game();
 }

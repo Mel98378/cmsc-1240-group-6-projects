@@ -4,6 +4,7 @@
 
 #include "area.h"
 #include "item.h"
+#include "role.h"
 
 // enum that represents the general state of the game
 enum Game_State {
@@ -11,6 +12,13 @@ enum Game_State {
     Lost,
     Playing
 };
+
+// linked list that represents a player's inventory
+struct Inventory {
+    Item_Type item;
+    Inventory* next;
+};
+
 
 // struct that represents a player
 struct Player {
@@ -24,28 +32,12 @@ struct Player {
 struct Party {
     Area location; // used to determine the next location of the party
     Game_State state;
+    int num_enemies; // number of enemies defeated
     Player* p0;
     Player* p1;
     Player* p2;
     Player* p3;
 };
-
-// linked list that represents a player's inventory
-struct Inventory {
-    Item_Type item;
-    Inventory* next;
-};
-
-// represents a class
-enum Role {
-    Archer,
-    Warrior,
-    Mage,
-
-    // not used for player role; only for items
-    Anyone 
-};
-
 // character creation (prompts for player choices form ui.h)
 /*
     description:

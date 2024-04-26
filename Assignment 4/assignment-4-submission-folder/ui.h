@@ -8,6 +8,7 @@
 char get_menu_choice(const char*); 
 
 // gets a string from the user given a max size
+// (size given does not inlcude the null terminator)
 char* get_string(int);
 
 // pauses the program until the user presses any key

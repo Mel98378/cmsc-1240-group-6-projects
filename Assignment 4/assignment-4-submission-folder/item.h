@@ -2,17 +2,17 @@
 
 // This file contains structs and functions related to items
 
-#include "player.h" // for roles
+#include "role.h"
 
 // main weapons can only be used by specific roles;
 // all others can be used by anyone
 enum Item_Type {
-    // main weapons that only specific roles can use
+    // main weapons that only specific roles can use (0-2)
     Bow,
     Sword,
     Staff,
 
-    // items anyone can use
+    // items anyone can use (3-6)
     Health_Potion,
     Vitamin,
     Rock,
