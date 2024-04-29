@@ -96,8 +96,7 @@
 */
 
 #include "game.h"
-#include "battle.h"
 
 int main() {
-    start_game(nullptr);
+    start_game();
 }

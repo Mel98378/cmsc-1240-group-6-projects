@@ -1,52 +1,34 @@
-#pragma once
+#ifndef SAVE_H
+#define SAVE_H
 
 // this file contains everything related to saving and loading
 // there will be 3 save slots, can only save/load at specific points
 
 #include "player.h"
 
-// struct that contains a snapshot of the party
-// includes location, items, health, names, etc.
-/*
-    save/load points: at the beginning of each area
-    ()
-*/
-struct Save_Data {
-    Party* party_state;
-};
+struct Party;
 
-// gets the data from a save slot (1-3)
-Save_Data* get_save_data(int);
+// gets the data from the save file; if there is no data,
+// default to creating new characters
+Party* get_save_data();
 
-// starts the game with the given save data
-void load_save_data();
-
-// makes or overwrites a save slot (given a save slot; 1, 2, or 3)
-void save_game(int);
+// makes or overwrites a save file
+void save_game(Party*);
 
 /*
     save data file will be a text file named savedata.txt; the format will look like this:
-    (brackets as delimiters, the previous character giving it meaning; custom items will be lost)
     ------------
 
-    1{ (slot One)
-        l{(location)}
-        0{ (player 0)
-            n{(name: string)}
-            i{ (inventory)
-                t{(item type: char)}
-                ... (other items)
-            }
-            r{(role: char)}
-            h{(health: int)}
-        }
-        ... (other players)
-    }
-    ... (other slots)
+    location=%d
+    enemies=%d
+    p0=name:%s inv:%s role:%d health:%d
+    p1=name:%s inv:%s role:%d health:%d
+    p2=name:%s inv:%s role:%d health:%d
+    p3=name:%s inv:%s role:%d health:%d
 
     ------------
-    in the final version this will be condensed, and only 
-    navigated using brace counting (levels of nesting) and the 
-    chars that precede each opening brace    
-
+    
+    if a player's name is an empty string {'\0'}, then the player does not exist
 */
+
+#endif

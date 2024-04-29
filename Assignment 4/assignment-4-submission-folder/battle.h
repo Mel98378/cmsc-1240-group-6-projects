@@ -1,9 +1,12 @@
-#pragma once
+#ifndef BATTLE_H
+#define BATTLE_H
 
 // This file contains the battle functions
-
+#include "player.h"
 #include "item.h"
-#include <stdlib.h>
+
+struct Party;
+
 
 // Enemy struct
 struct Enemy {
@@ -28,36 +31,7 @@ enum Enemy_Type {
     create a new enemy from scratch with the appropriate details,
     then return it.
 */
-Enemy* get_enemy_of_type(Enemy_Type type) {
-    Enemy* enemy = new Enemy();
-    switch (type) {
-        case Shrimp:
-            enemy->name = "Shrimp";
-            enemy->description = "A small but agile opponent";
-            enemy->damage = 100;
-            enemy->health = 5;
-            break;
-        case Mosquito:
-            enemy->name = "Mosquito";
-            enemy->description = "A blood sucking insect";
-            enemy->damage = 10;
-            enemy->health = 30;
-            break;
-        case Mimic:
-            enemy->name = "Mimic";
-            enemy->description = "...";
-            enemy->damage = 10;
-            enemy->health = 40;
-            break;
-        case Dragon:
-            enemy->name = "Dragon";
-            enemy->description = "The final boss";
-            enemy->damage = 30;
-            enemy->health = 100;
-            break;
-    }
-    return enemy;
-}
+Enemy* get_enemy_of_type(Enemy_Type);
 
 // delete an enemy
 /*
@@ -68,12 +42,7 @@ Enemy* get_enemy_of_type(Enemy_Type type) {
     
     then, make sure to deal with the dangling pointer.
 */
-Enemy* delete_enemy(Enemy* enemy) {
-    delete[] enemy->name;
-    delete[] enemy->description;
-    delete enemy;
-    return nullptr;
-}
+Enemy* delete_enemy(Enemy*);
 
 // mineshaft battle function
 /*
@@ -85,11 +54,9 @@ Enemy* delete_enemy(Enemy* enemy) {
     if all the players in the party die, change the party's game state
     (to Game_State::Lost) and return.
 */
-void mineshaft_battle() {
-    Enemy_Type random_enemy = static_cast<Enemy_Type>(rand() % 3);
 
-    Enemy* enemy = get_enemy_of_type(random_enemy);
-}
+void mineshaft_battle(Party*);
+
 
 // castle battle function
 /*
@@ -100,6 +67,8 @@ void mineshaft_battle() {
     same lose condition as above, but if the players win, then set 
     the game state accordingly and return.
 */
-void castle_battle() {
-    Enemy* enemy = get_enemy_of_type(Dragon);
-}
+
+void castle_battle(Party*);
+
+#endif
+

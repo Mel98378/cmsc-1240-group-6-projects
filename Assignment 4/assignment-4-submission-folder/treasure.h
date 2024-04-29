@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TREASURE_H
+#define TREASURE_H
 
 // this file contains the treasure features
 
@@ -6,3 +7,5 @@
 
 // returns a random item type (must not be a role-specific item)
 Item_Type treasure();
+
+#endif
