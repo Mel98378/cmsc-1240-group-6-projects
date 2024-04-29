@@ -38,12 +38,7 @@ Party* create_characters() {
         add_to_inventory(p, (Item_Type)(int)p->role); // main weapons correspond to same numbers as roles
 
         // add it to the correct player
-        switch(i) {
-            case 0: party->p0 = p;
-            case 1: party->p1 = p;
-            case 2: party->p2 = p;
-            case 3: party->p3 = p;
-        }
+        party->players[i] = p;
     }
 
     // return the created party
@@ -52,7 +47,7 @@ Party* create_characters() {
 
 Party* delete_party(Party* party) {
     for(int i = 0; i < 4; i++) {
-        Player* p_to_delete = get_player_number(i);
+        Player* p_to_delete = party->players[i];
 
         if(p_to_delete == nullptr) {
             continue;
@@ -66,23 +61,15 @@ Party* delete_party(Party* party) {
         p_to_delete = nullptr;
     }
 
-    party->p0 = nullptr;
-    party->p1 = nullptr;
-    party->p2 = nullptr;
-    party->p3 = nullptr;
+    for(int i = 0; i < 4; i++) {
+        party->players[i] = nullptr;
+    }
+
+    return party;
 }
 
 int player_num_items(Player* player, Item_Type item) {
 
-}
-
-Player* get_player_number(Party* party, int num) {
-    switch(num) {
-        case 0: return party->p0;
-        case 1: return party->p1;
-        case 2: return party->p2;
-        case 3: return party->p3;
-    }
 }
 
 void add_to_inventory(Player* player, Item_Type item) {
