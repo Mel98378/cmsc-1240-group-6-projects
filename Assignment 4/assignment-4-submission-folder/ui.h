@@ -8,9 +8,8 @@
 // (eg. "sl" for [s]aving and [l]oading)
 char get_menu_choice(const char*); 
 
-// gets a string from the user given a max size
-// (size given does not inlcude the null terminator)
-char* get_string(int);
+// gets a string from the user
+char* get_user_name();
 
 // pauses the program until the user presses any key
 /*

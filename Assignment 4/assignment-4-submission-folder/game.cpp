@@ -11,6 +11,8 @@ void game_loop(Party*);
 void print_lose_screen();
 void print_win_screen();
 
+// the beginning of the game; mostly for character creation/loading saves
+//MARK: start_game()
 void start_game() {
 
     // check if the players want to load from a save
@@ -28,6 +30,8 @@ void start_game() {
     game_loop(party);
 }
 
+// the main game loop
+//MARK: game_loop()
 void game_loop(Party* party) {
     while(party->state = Game_State::Playing) {
         switch(party->location) {
@@ -46,6 +50,8 @@ void game_loop(Party* party) {
     }
 }
 
+// win and loss screens
+//MARK: win() and lose()
 void print_lose_screen() {
     puts("You won!");
 }

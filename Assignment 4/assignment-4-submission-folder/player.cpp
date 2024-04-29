@@ -7,6 +7,8 @@
 
 void delete_inventory(Inventory*);
 
+// character creation logic
+//MARK: create_characters()
 Party* create_characters() {
     Party* party = new Party();
     party->location = Area::Town;
@@ -22,7 +24,7 @@ Party* create_characters() {
 
         // get the player's name
         printf("Player %d, enter your name: ", i);
-        p->name = get_string(15);
+        p->name = get_user_name();
         puts("");
 
         // print and get the player's role
@@ -45,6 +47,8 @@ Party* create_characters() {
     return party;
 }
 
+// delete the party
+//MARK: delete_party()
 Party* delete_party(Party* party) {
     for(int i = 0; i < 4; i++) {
         Player* p_to_delete = party->players[i];
@@ -68,18 +72,26 @@ Party* delete_party(Party* party) {
     return party;
 }
 
+// returns the number of a specific item type any player has
+//MARK: player_num_items()
 int player_num_items(Player* player, Item_Type item) {
 
 }
 
+// adds an item to a player's inventory
+//MARK: add_to_inventory()
 void add_to_inventory(Player* player, Item_Type item) {
     
 }
 
+// removes an item from a player's inventory
+//MARK: remove_from_inventory()
 void remove_from_inventory(Player* player, Item_Type item) {
     
 }
 
+// deletes a player's inventory
+//MARK: delete_inventory()
 void delete_inventory(Inventory* inv) {
     Inventory* to_del = inv;
     Inventory* next = nullptr;
