@@ -13,7 +13,7 @@ struct Party;
 Party* get_save_data();
 
 // makes or overwrites a save file
-void save_game();
+void save_game(Party*);
 
 /*
     save data file will be a text file named savedata.txt; the format will look like this:

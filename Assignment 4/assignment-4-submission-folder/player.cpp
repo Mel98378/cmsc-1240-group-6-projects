@@ -10,6 +10,7 @@ void delete_inventory(Inventory*);
 Party* create_characters() {
     Party* party = new Party();
     party->location = Area::Town;
+    party->state = Game_State::Playing;
     party->num_enemies = 0;
 
     printf("Enter the number of players [1-4]: ");
