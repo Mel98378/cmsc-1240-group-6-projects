@@ -89,10 +89,6 @@
         - input [ui.h] (teddy)
     new items
         - saving and loading [save.h] (lavender)
-
-    TODO (by name):
-    ----
-    evan: treasure, inventory, 
 */
 
 #include "game.h"
