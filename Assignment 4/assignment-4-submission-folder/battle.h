@@ -3,8 +3,6 @@
 
 // This file contains the battle functions
 #include "player.h"
-#include "item.h"
-
 struct Party;
 
 

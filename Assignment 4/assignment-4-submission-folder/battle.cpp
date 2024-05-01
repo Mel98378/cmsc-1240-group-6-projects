@@ -1,14 +1,14 @@
 #include "battle.h"
+#include "ui.h"
+#include "player.h"
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 using namespace std;
 
-// Enemy Struct
-struct Enemy {
-    const char* name;
-    const char* description;
-    int damage;
-    int health;
+// Party Struct
+struct Party {
+    int num_players;
 };
 
 // Get enemy based on its type
@@ -23,19 +23,19 @@ Enemy* get_enemy_of_type(Enemy_Type enemyType) {
             break;
         case Mosquito:
             enemy->name = "Mosquito";
-            enemy->description = "...";
+            enemy->description = "This quick, annoying insect has a painful bite!";
             enemy->damage = 10;
             enemy->health = 30;
             break;
         case Mimic:
             enemy->name = "Mimic";
-            enemy->description = "...";
+            enemy->description = "This sneaky creature is tricky and deceptive!";
             enemy->damage = 10;
             enemy->health = 40;
             break;
         case Dragon:
             enemy->name = "Dragon";
-            enemy->description = "...";
+            enemy->description = "This fearsome beast is garding the castle!";
             enemy->damage = 30;
             enemy->health = 100;
             break;
@@ -52,27 +52,24 @@ Enemy* delete_enemy(Enemy* enemy) {
 }
 
 // Battle function
-void battle_turn(int playerIndex, Party* party, Enemy* enemy) {
-    cout << "Player " << playerIndex << ", choose your action: " << endl;
-    cout << "1. Attack" << endl;
-    cout << "2. Use an Item" << endl;
-    int action;
+void battle_turn(Player* player, Party* party, Enemy* enemy) {
+    char action = get_menu_choice();
     switch (action) {
         case 1: // Attack
-            enemy->health -= party->players[playerIndex].damage;
-            cout << "Player " << playerIndex << " attacks and deals " << party->players[playerIndex].damage << " damage." << endl;
+            enemy->health -= party->player->damage;
+            cout << "Player " << player << " attacks and deals " << party->player->damage << " damage." << endl;
             break;
         case 2: // Use item
-            if (!player_has_items(&party->players[playerIndex])) {
+            if (!player_has_items(&party->player)) {
                 cout << "You don't have any items." << endl;
-                battle_turn(playerIndex, part, enemy);
+                battle_turn(player, party, enemy);
             } else {
-                use_item(&party->players[playerIndex]);
+                use_item(&party->player);
             }
             break;
         default:
             cout << "Invalid Input. Please try again." << endl;
-            battle_turn(playerIndex, party, enemy);
+            battle_turn(player, party, enemy);
             break;
     }
 }
@@ -101,7 +98,7 @@ void mineshaft_battle(Party* party) {
     while (true) {
         // Players turn
         for (int i = 0; i < party->num_players; i++) {
-            if (party->players[i].health <= 0) {
+            if (party->player[i].health <= 0) {
                 continue;
             }
             battle_turn(i, party, enemy);
@@ -118,26 +115,27 @@ void mineshaft_battle(Party* party) {
         int targetIndex;
         do {
             targetIndex = rand() % party->num_players;
-        } while (party->players[targetIndex].health <= 0);
+        } while (party->player[targetIndex].health <= 0);
         // Damage
-        party->players[targetIndex].health -= enemy->damage;
+        party->player[targetIndex].health -= enemy->damage;
         cout << "The " << enemy->name << " attacks player " << targetIndex << " and deals " << enemy->damage << " damage." << endl;
         // Check if player is alive
-        if (party->players[targetIndex].health <= 0) {
+        if (party->player[targetIndex].health <= 0) {
             cout << "Player " << targetIndex << " has been defeated!" << endl;
         }
 
         //Check if all players are defeated
         bool allPlayersDefeated = true;
         for (int i = 0; i < party->num_players; i++) {
-            if (party->players[i].health > 0) {
+            if (party->player[i].health > 0) {
                 allPlayersDefeated = false;
                 break;
             }
         }
         if (allPlayersDefeated) {
             cout << "All players have been defeated!" << endl;
-            break;
+            party->state = Game_State::Lost;
+            return;
         }
     }
     delete_enemy(enemy);
@@ -160,24 +158,25 @@ void castle_battle(Party* party) {
     while (true) {
         // Players turn
         for (int i = 0; i < party->num_players; i++) {
-            if (party->players[i].health <= 0) {
+            if (party->player[i].health <= 0) {
                 continue;
             }
-            battle_turn(i, party, enemy);
+            battle_turn(i, party, dragon);
             
         // Check if enemy is defeated
             if (enemy->health <= 0) {
                 cout << "\nEnemy Defeated!\n" << endl;
-                break;
+                party->state = Game_State::Won;
+                return;
             }
         }
 
         // Dragon's turn
         for (int i = 0; i < party->num_players; i++) {
-            if (party->players[i].health > 0) {
-                party->players[i].health -= Dragon->damage;
+            if (party->player[i].health > 0) {
+                party->player[i].health -= Dragon->damage;
                 cout << "The dragon attacks player " << i << " and deals " << dragon->damage << " damage." << endl;
-                if (party->players[i].health <= 0) {
+                if (party->player[i].health <= 0) {
                     cout << "Player " << i << " has been defeated." << endl;
                 }
             }
@@ -186,14 +185,15 @@ void castle_battle(Party* party) {
         //Check if all players are defeated
         bool allPlayersDefeated = true;
         for (int i = 0; i < party->num_players; i++) {
-            if (party->players[i].health > 0) {
+            if (party->player[i].health > 0) {
                 allPlayersDefeated = false;
                 break;
             }
         }
         if (allPlayersDefeated) {
             cout << "All players have been defeated!" << endl;
-            break;
+            party->state = Game_State::Lost;
+            return;
         }
     }
 
