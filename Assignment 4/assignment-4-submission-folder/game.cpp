@@ -43,11 +43,11 @@ void game_loop(Party* party) {
         }
     }
 
-    if(party->state == Game_State::Lost) {
-        print_lose_screen();
-    }
-    else if(party->state == Game_State::Won) {
-        print_win_screen();
+    switch(party->state) {
+        case Game_State::Playing: break;
+        case Game_State::Won: print_win_screen(); break;
+        case Game_State::Lost: print_lose_screen();
+        case Game_State::Quit: return;
     }
 }
 
