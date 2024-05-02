@@ -21,7 +21,8 @@ Party* get_save_data() {
     // check if there is a save
     if(file == nullptr) {
         puts("No save file exists.");
-        return nullptr;
+        // if no save exists, create the characters
+        return create_characters();
     }
 
     // recreate the party

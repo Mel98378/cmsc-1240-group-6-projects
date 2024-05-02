@@ -15,7 +15,8 @@ enum Role;
 enum Game_State {
     Won,
     Lost,
-    Playing
+    Playing,
+    Quit
 };
 
 // linked list that represents a player's inventory
