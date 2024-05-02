@@ -23,8 +23,9 @@ void start_game() {
     Party* party = nullptr;
 
     switch(choice) {
-        case 'y': party = get_save_data();
-        case 'n': party = create_characters();
+        case 'y': party = get_save_data(); break;
+        default:
+        case 'n': party = create_characters(); break;
     }
 
     game_loop(party);
@@ -33,7 +34,7 @@ void start_game() {
 // the main game loop
 //MARK: game_loop()
 void game_loop(Party* party) {
-    while(party->state = Game_State::Playing) {
+    while(party->state == Game_State::Playing) {
         switch(party->location) {
             case Area::Town: town(party); break;
             case Area::Mineshaft: mineshaft(party); break;
@@ -42,11 +43,11 @@ void game_loop(Party* party) {
         }
     }
 
-    if(party->state == Game_State::Lost) {
-        print_lose_screen();
-    }
-    else if(party->state == Game_State::Won) {
-        print_win_screen();
+    switch(party->state) {
+        case Game_State::Playing: break;
+        case Game_State::Won: print_win_screen(); break;
+        case Game_State::Lost: print_lose_screen();
+        case Game_State::Quit: return;
     }
 }
 
