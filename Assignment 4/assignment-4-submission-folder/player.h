@@ -69,9 +69,6 @@ Party* delete_party(Party*);
 */
 int player_num_items(Player*, Item_Type);
 
-// returns the player with the specified number
-Player* get_player_number(int);
-
 // functions to add and remove items from player inventories
 void add_to_inventory(Player*, Item_Type);
 void remove_from_inventory(Player*, Item_Type);

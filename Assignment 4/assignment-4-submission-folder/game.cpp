@@ -29,6 +29,7 @@ void start_game() {
     }
 
     game_loop(party);
+    delete_party(party);
 }
 
 // the main game loop
@@ -47,7 +48,7 @@ void game_loop(Party* party) {
         case Game_State::Playing: break;
         case Game_State::Won: print_win_screen(); break;
         case Game_State::Lost: print_lose_screen();
-        case Game_State::Quit: return;
+        case Game_State::Quit: break;
     }
 }
 

@@ -21,12 +21,11 @@ Party* get_save_data() {
     // check if there is a save
     if(file == nullptr) {
         puts("No save file exists.");
-        // if no save exists, create the characters
         return create_characters();
     }
 
     // recreate the party
-    Party* party = new Party();
+    Party* party = (Party*) malloc(sizeof(Party));
 
     // check the area and location data
     int location;
@@ -40,25 +39,28 @@ Party* get_save_data() {
 
     party->location = (Area)location;
     party->num_enemies = enemies_defeated;
+    party->state = Game_State::Playing;
 
     // get to the start of the new line
     fseek(file, 3, SEEK_CUR);
 
     // read the player data
     for(int x = 0; x < 4; x++) {
-        Player* p = new Player();
+        Player* p = (Player*) malloc(sizeof(Player));
+        p->name = (char*) malloc(16);
+        p->inv = (Inventory*) malloc(sizeof(Inventory));
 
         // initialized values
         char line[200] = {0};
-        char name[16] = {0};
-        char inv[15] = {0};
+        char* name = (char*) malloc(16);
+        char* inv = (char*) malloc(50);
         char role = 0;
-        char health[4] = {0};
+        char* health = (char*) malloc(4);
 
         // get the line to parse into the data
         fgets(line, sizeof(line), file); 
 
-        int i = 0;
+        int i = 1;
         
         // get to the start of the player name
         while(line[i - 1] != ':') {
@@ -79,10 +81,14 @@ Party* get_save_data() {
             i++;
             j++;
         }
+        name[j] = '\0';
 
         // set p0 to nullptr and return early if they have no name
-        if(name[0] == 0) {
-            delete p;
+        if(name[0] == '\0') {
+            free(name);
+            free(inv);
+            free(health);
+            free(p);
             p = nullptr;
             party->players[x] = p;
             continue;
@@ -103,6 +109,7 @@ Party* get_save_data() {
             i++;
             j++;
         }
+        inv[j] = '\0';
 
         // reach the player role
         while(line[i - 1] != ':') {
@@ -128,12 +135,15 @@ Party* get_save_data() {
             i++;
             j++;
         }
+        health[j] = '\0';
 
         // initialize the new player's values
         p->name = name;
         p->inv = inv_from_str(inv);
+        free(inv);
         p->role = (Role)(role - '0');
         p->health = std::stoi(health);
+        free(health);
 
         // add the new player to the party
         party->players[x] = p;
@@ -167,14 +177,14 @@ void save_game(Party* party) {
 
     for(int i = 0; i < 4; i++) {
         Player* p = party->players[i];
-        char* name;
-        char* inv;
+        char* name = (char*) malloc(16);
+        char* inv = (char*) malloc(50);
         int role;
         int health;
 
         if(p == nullptr) {
-            name = (char*)"";
-            inv = (char*)"";
+            name[0] = '\0';
+            inv[0] = '\0';
             role = 0;
             health = 0;
             fprintf(file, "p%d=name:%s inv:%s role:%d health:%d \n", i, name, inv, role, health);
@@ -198,14 +208,17 @@ void save_game(Party* party) {
 //MARK: inv_as_str()
 char* inv_as_str(Inventory* inv) {
     Inventory* curr = inv;
-    char* result = (char*) malloc(0);
+    char* result = nullptr;
 
     int i = 0;
     while(curr != nullptr) {
-        result = (char*) realloc(result, sizeof(result) + 1*sizeof(char));
+        result = (char*) realloc(result, sizeof(result) + 1);
         result[i] = curr->item + '0';
         curr = curr->next;
         i++;
+    }
+    if(result == nullptr) {
+        return (char*)'\0';
     }
     result[i] = '\0';
 
@@ -215,17 +228,20 @@ char* inv_as_str(Inventory* inv) {
 // turns the inventory string from the save file into an inventory
 //MARK: inv_from_str()
 Inventory* inv_from_str(char* string) {
-    Inventory* inv = new Inventory();
+    Inventory* inv = (Inventory*) malloc(sizeof(Inventory));
     Inventory* head = inv;
 
     int i = 0;
-    while(string[i] != '\0') {
-        inv->item = (Item_Type) string[i];
-        inv->next = new Inventory();
+    while(true) {
+        inv->item = (Item_Type) (string[i] - '0');
+        if(string[i+1] == '\0') {
+            inv->next = nullptr;
+            break;
+        }
+        inv->next = (Inventory*) malloc(sizeof(Inventory));
         inv = inv->next;
         i++;
     }
-    inv->next = nullptr;
 
     return head;
 }

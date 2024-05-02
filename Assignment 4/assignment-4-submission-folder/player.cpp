@@ -10,7 +10,7 @@ void delete_inventory(Inventory*);
 // character creation logic
 //MARK: create_characters()
 Party* create_characters() {
-    Party* party = new Party();
+    Party* party = (Party*) malloc(sizeof(Party));
     party->location = Area::Town;
     party->state = Game_State::Playing;
     party->num_enemies = 0;
@@ -20,7 +20,7 @@ Party* create_characters() {
     puts("");
 
     for(int i = 0; i < num_players; i++) {
-        Player* p = new Player();
+        Player* p = (Player*) malloc(sizeof(Player));
 
         // get the player's name
         printf("Player %d, enter your name: ", i);
@@ -57,11 +57,11 @@ Party* delete_party(Party* party) {
             continue;
         }
 
-        delete p_to_delete->name;
+        free(p_to_delete->name);
         p_to_delete->name = nullptr;
         delete_inventory(p_to_delete->inv);
         p_to_delete->inv = nullptr;
-        delete p_to_delete;
+        free(p_to_delete);
         p_to_delete = nullptr;
     }
 
@@ -96,11 +96,9 @@ void delete_inventory(Inventory* inv) {
     Inventory* to_del = inv;
     Inventory* next = nullptr;
 
-    while(inv->next != nullptr) {
-        next = inv->next;
-
-        delete inv;
-
-        inv = next;
+    while(to_del->next != nullptr) {
+        next = to_del->next;
+        free(to_del);
+        to_del = next;
     }
 }

@@ -79,7 +79,7 @@
     -----
     reimplementations
         - main program loop [game.h] (lavender)
-        - area functions [area.h] (teddy)
+        - area functions [area.h] (lavender)
         - battle functions and enemies [battle.h] (camron)
         - treasure function [treasure.h] (evan)
         - character creation/deletion [player.h] (lavender)
