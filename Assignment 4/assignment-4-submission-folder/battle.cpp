@@ -1,15 +1,12 @@
 #include "battle.h"
 #include "ui.h"
 #include "player.h"
+#include "item.h"
+#include "treasure.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 using namespace std;
-
-// Party Struct
-struct Party {
-    int num_players;
-};
 
 // Get enemy based on its type
 Enemy* get_enemy_of_type(Enemy_Type enemyType) {
@@ -53,19 +50,23 @@ Enemy* delete_enemy(Enemy* enemy) {
 
 // Battle function
 void battle_turn(Player* player, Party* party, Enemy* enemy) {
-    char action = get_menu_choice();
+    string playerMessage = "Player " + string(player->name) + ", choose your action\n1. Attack\n2. Use item\n";
+    int action = get_menu_choice(playerMessage.c_str());
     switch (action) {
-        case 1: // Attack
-            enemy->health -= party->player->damage;
-            cout << "Player " << player << " attacks and deals " << party->player->damage << " damage." << endl;
+        case '1': // Attack
+            enemy->health -= get_item_effect(Item_Type());
+            cout << "Player " << player << " attacks and deals " << Item_Type() << " damage." << endl;
             break;
-        case 2: // Use item
-            if (!player_has_items(&party->player)) {
+        case '2': // Use item
+            if (player->inv <= 0) {
                 cout << "You don't have any items." << endl;
                 battle_turn(player, party, enemy);
             } else {
-                use_item(&party->player);
-            }
+                cout << "Choose your item " << endl;
+                string input = get_item_name(Item_Type());
+                cin >> input;
+                get_item_effect(Item_Type());
+                }
             break;
         default:
             cout << "Invalid Input. Please try again." << endl;
@@ -76,9 +77,9 @@ void battle_turn(Player* player, Party* party, Enemy* enemy) {
 
 bool enemyDefeated = false;
 // Mineshaft battle
-void mineshaft_battle(Party* party) {
+void mineshaft_battle(Party* party, Player* players) {
     srand(time(nullptr));
-    int randIndex = rand() % MINESHAFT_ENEMIES;
+    int randIndex = rand();
     Enemy_Type enemyType;
     switch (randIndex) {
         case 0:
@@ -98,12 +99,12 @@ void mineshaft_battle(Party* party) {
     while (true) {
         // Players turn
         for (int i = 0; i < party->num_players; i++) {
-            if (party->player[i].health <= 0) {
+            if (players[i].health <= 0) {
                 continue;
             }
-            battle_turn(i, party, enemy);
-
-        // Check if enemy is defeated
+            battle_turn(players, party, enemy);
+            
+            // Check if enemy is defeated
             if (enemy->health <= 0) {
                 cout << "\nEnemy Defeated!\n" << endl;
                 enemyDefeated = true;
@@ -115,19 +116,19 @@ void mineshaft_battle(Party* party) {
         int targetIndex;
         do {
             targetIndex = rand() % party->num_players;
-        } while (party->player[targetIndex].health <= 0);
+        } while (players[targetIndex].health <= 0);
         // Damage
-        party->player[targetIndex].health -= enemy->damage;
+        players[targetIndex].health -= enemy->damage;
         cout << "The " << enemy->name << " attacks player " << targetIndex << " and deals " << enemy->damage << " damage." << endl;
         // Check if player is alive
-        if (party->player[targetIndex].health <= 0) {
+        if (players[targetIndex].health <= 0) {
             cout << "Player " << targetIndex << " has been defeated!" << endl;
         }
 
         //Check if all players are defeated
         bool allPlayersDefeated = true;
         for (int i = 0; i < party->num_players; i++) {
-            if (party->player[i].health > 0) {
+            if (players[i].health > 0) {
                 allPlayersDefeated = false;
                 break;
             }
@@ -142,7 +143,7 @@ void mineshaft_battle(Party* party) {
 }
 
 // Castle Battle
-void castle_battle(Party* party) {
+void castle_battle(Party* party, Player* player, Enemy* enemy) {
     // Check if enemy is defeated
     if(!enemyDefeated) {
         cout << "You must defeat an enemy in the mineshaft before you can enter the castle!" << endl;
@@ -158,10 +159,10 @@ void castle_battle(Party* party) {
     while (true) {
         // Players turn
         for (int i = 0; i < party->num_players; i++) {
-            if (party->player[i].health <= 0) {
+            if (player[i].health <= 0) {
                 continue;
             }
-            battle_turn(i, party, dragon);
+            battle_turn(player, party, dragon);
             
         // Check if enemy is defeated
             if (enemy->health <= 0) {
@@ -173,10 +174,10 @@ void castle_battle(Party* party) {
 
         // Dragon's turn
         for (int i = 0; i < party->num_players; i++) {
-            if (party->player[i].health > 0) {
-                party->player[i].health -= Dragon->damage;
+            if (player[i].health > 0) {
+                player[i].health -= dragon->damage;
                 cout << "The dragon attacks player " << i << " and deals " << dragon->damage << " damage." << endl;
-                if (party->player[i].health <= 0) {
+                if (player[i].health <= 0) {
                     cout << "Player " << i << " has been defeated." << endl;
                 }
             }
@@ -185,7 +186,7 @@ void castle_battle(Party* party) {
         //Check if all players are defeated
         bool allPlayersDefeated = true;
         for (int i = 0; i < party->num_players; i++) {
-            if (party->player[i].health > 0) {
+            if (player[i].health > 0) {
                 allPlayersDefeated = false;
                 break;
             }
@@ -198,5 +199,5 @@ void castle_battle(Party* party) {
     }
 
     // Delete dragon
-    delete_enemy(Dragon);
+    delete_enemy(dragon);
 }

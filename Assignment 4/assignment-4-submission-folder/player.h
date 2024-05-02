@@ -39,6 +39,7 @@ struct Party {
     Area location;
     int num_enemies; // number of enemies defeated
     Player* players[4];
+    int num_players;
 };
 
 // character creation (prompts for player choices form ui.h)
